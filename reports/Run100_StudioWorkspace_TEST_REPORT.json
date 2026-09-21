@@ -1,0 +1,30 @@
+{
+  "run": 100,
+  "baseline": "Run99 FocusWorkspaceUX",
+  "baseline_sha256": "05772979e0619290680a108197cc7fa0a1d6d499c9d6ae835311bbcfeca4d263",
+  "rollback_sha256": "05772979e0619290680a108197cc7fa0a1d6d499c9d6ae835311bbcfeca4d263",
+  "candidate": "ZeroCut_Run100_Candidate_StudioWorkspace.pyw",
+  "candidate_sha256": "66e756d74b1eaa66eea9446c09db5062bdcc8a55c893ee2d33c51105c9520d30",
+  "improvement": "Studio Workspace UX: AI Director moved to right sidecar, video-first center, dynamic Import/Analyze/Montage/Export rail, proportional professional track timeline.",
+  "tests": {
+    "py_compile": "PASS",
+    "module_import": "PASS",
+    "embedded_assets_decode": "PASS",
+    "javascript_node_check": "PASS",
+    "dom_structure": "PASS",
+    "http_root": "PASS",
+    "http_styles_css": "PASS",
+    "http_app_js": "PASS",
+    "api_status": "PASS",
+    "fixture_import": "PASS (2.4s H264/AAC)",
+    "real_export": "PASS",
+    "export_decode_probe": "PASS (H264 320x180 + AAC 48kHz)",
+    "visual_render": "PASS via Playwright/Chromium using the exact Run100 HTML/CSS; editor visible, Montage active, 3 timeline clips, no page errors",
+    "live_localhost_browser_navigation": "NOT_EXECUTED: environment blocked localhost browser navigation",
+    "windows_real": "NOT_EXECUTED"
+  },
+  "regressions_detected": false,
+  "audit_cursor": "34->35",
+  "github_audit": "page 34 returned zero repositories for four progressive queries; no third-party code copied",
+  "cost": "0 EUR core; no paid API/cloud dependency added"
+}
