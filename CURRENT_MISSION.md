@@ -1,7 +1,7 @@
-# CURRENT MISSION — Run107 A/V Integrity
+# CURRENT MISSION — Run108 Highlight Core
 
-Base: validated Run106 Timeline Reliability.
-Candidate: Run107 A/V Integrity.
-Single macro-area: output stream timing integrity.
+Base: validated Run107 A/V Integrity.
+Candidate: Run108 Highlight Core.
+Single macro-area: generic highlight ranking.
 
-Exports with expected audio must now pass video/audio start-time and duration-delta tolerances in addition to container probe and real decode smoke. A deliberately delayed-audio fixture must be rejected.
+Highlight candidates now require explicit audio/motion/scene evidence. Single-signal spikes are penalized, smart dead-air is excluded, and every candidate exposes evidence + confidence instead of pretending semantic understanding.
