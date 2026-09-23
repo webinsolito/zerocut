@@ -19,8 +19,8 @@
     "fixture_import": "PASS (2.4s H264/AAC)",
     "real_export": "PASS",
     "export_decode_probe": "PASS (H264 320x180 + AAC 48kHz)",
-    "visual_render": "PASS via Playwright/Chromium using the exact Run100 HTML/CSS; editor visible, Montage active, 3 timeline clips, no page errors",
-    "live_localhost_browser_navigation": "NOT_EXECUTED: environment blocked localhost browser navigation",
+    "visual_render": "PASS via Playwright/Chromium set_content using the exact Run100 HTML/CSS; editor visible, Montage active, 3 timeline clips, no page errors",
+    "live_localhost_browser_navigation": "NOT_EXECUTED: environment blocked localhost browser navigation with ERR_BLOCKED_BY_ADMINISTRATOR",
     "windows_real": "NOT_EXECUTED"
   },
   "regressions_detected": false,

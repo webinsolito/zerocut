@@ -1,0 +1,26 @@
+name: ZeroCut Source Truth Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "rollback/**"
+      - "reports/**"
+      - "tests/**"
+      - "STATUS.md"
+      - "CURRENT_MISSION.md"
+      - ".github/workflows/zerocut-smoke.yml"
+
+jobs:
+  source-truth-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify recovered baseline
+        run: python tests/test_source_truth.py
