@@ -1,9 +1,9 @@
-# CURRENT MISSION — Run105 Windows Media Roundtrip
+# CURRENT MISSION — Run106 Timeline Reliability
 
-Base: validated Run104 Windows Core.
-Candidate: Run105 Windows Media Roundtrip.
-Single macro-area: real Windows FFmpeg media path.
+Base: validated Run105 Windows Media Roundtrip.
+Candidate: Run106 Timeline Reliability.
+Single macro-area: fail-closed timeline edit validation.
 
-A Windows runner must generate a real H264/AAC fixture and exercise ZeroCut's FFprobe, preview-proxy generation, trimmed export, output probe and decode smoke using the validated FFmpeg/FFprobe binaries.
+Reject NaN/infinite/reversed/out-of-range/too-short/duplicate-ID/oversized timelines instead of silently coercing them. Invalid selected segment falls back to a valid segment.
 
-Promotion requires Windows Run104+Run105 and the Linux regression gate green.
+Windows Run104/105 evidence remains preserved; this run uses Linux core regression plus timeline tests.

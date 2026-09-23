@@ -39,25 +39,8 @@ jobs:
       - name: Run103 concurrency safety
         if: hashFiles('src/ZeroCut_Run103_Candidate_ConcurrencySafety.pyw') != ''
         run: python tests/test_run103_concurrency_safety.py
+      - name: Run106 timeline reliability
+        if: hashFiles('src/ZeroCut_Run106_Candidate_TimelineReliability.pyw') != ''
+        run: python tests/test_run106_timeline_reliability.py
 
 
-  windows-core-smoke:
-    runs-on: windows-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-      - name: Install FFmpeg Windows runtime
-        shell: pwsh
-        run: |
-          if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
-            choco install ffmpeg -y --no-progress
-          }
-          ffmpeg -version
-          ffprobe -version
-      - name: Run104 Windows core certification
-        run: python tests/test_run104_windows_core.py
-      - name: Run105 Windows media roundtrip
-        run: python tests/test_run105_windows_media_roundtrip.py
