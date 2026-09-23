@@ -1,8 +1,14 @@
-# CURRENT MISSION — P0 Source-of-Truth Recovery
+# CURRENT MISSION
 
-The official engine baseline is Run100 Studio Workspace. Do not rebuild ZeroCut from `index.html`; that file is only a static preview.
+P0 SOURCE-OF-TRUTH RECOVERY: COMPLETE.
 
-Protected flow after recovery:
+Official baseline: Run100 Studio Workspace.
+Official rollback: Run99 FocusWorkspaceUX.
+Portable recovery CI: GREEN.
+
+Protected flow:
 IMPORT VIDEO → ANALYSIS/DETECTION → HIGHLIGHT SELECTION → TIMELINE/EDIT → PREVIEW → EXPORT.
 
-Next gate: obtain a green source-truth smoke result. Only then may a distinct Run101 candidate be created for one macro-area.
+Next separate cycle: Run101, one P0 core-reliability macro-area only. Preserve Run100 unchanged as the validated baseline and create rollback before any Run101 modification.
+
+Priority for Run101: FFmpeg/FFprobe + import/export reliability and output probe, using real reproducible fixtures available in the environment. Do not claim Windows/GPU validation without the real environment.
