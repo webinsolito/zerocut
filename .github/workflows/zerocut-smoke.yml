@@ -51,5 +51,8 @@ jobs:
       - name: Run109 R6 evidence gate
         if: hashFiles('src/ZeroCut_Run109_Candidate_R6EvidenceGate.pyw') != ''
         run: python tests/test_run109_r6_evidence_gate.py
+      - name: Run110 real RapidOCR certification
+        if: hashFiles('src/ZeroCut_Run110_Candidate_OCRCertification.pyw') != ''
+        run: python tests/test_run110_ocr_certification.py
 
 

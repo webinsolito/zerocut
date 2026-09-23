@@ -1,9 +1,9 @@
-# CURRENT MISSION — Run109 R6 Evidence Gate
+# CURRENT MISSION — Run110 OCR Certification
 
-Base: validated Run108 Highlight Core.
-Candidate: Run109 R6 Evidence Gate.
-Single macro-area: Rainbow Six semantic-event safety.
+Base: validated Run109 R6 Evidence Gate.
+Candidate: Run110 OCR Certification.
+Single macro-area: real local RapidOCR inference.
 
-Only explicit supported replay/timeline semantic events can become R6 automatic clips. Kills/headshots require replay confidence, duplicates are suppressed, unsupported signal-only events are rejected.
+The gate installs ZeroCut's pinned RapidOCR + ONNX Runtime into tools/python, proves a real generic OCR inference, then OCRs a locally generated ROUND WON fixture and requires the R6 semantic classifier to recognize victory.
 
-No real R6 gameplay/replay fixture was found, so visual gameplay accuracy remains explicitly NOT CERTIFIED.
+Package discovery alone is not a pass.
