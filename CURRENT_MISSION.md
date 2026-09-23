@@ -1,11 +1,11 @@
-# CURRENT MISSION — Run101 Candidate Validation
+# CURRENT MISSION
 
-Base: Run100 Studio Workspace (validated source-of-truth).
-Candidate: Run101 Media Reliability.
-Branch: candidate/run101-media-reliability.
+Run101 Media Reliability: VALIDATED AND PROMOTED.
 
-Single macro-area: P0 core media reliability.
+Protected baseline for the next cycle:
+- current: Run101 Media Reliability;
+- rollback: Run100 Studio Workspace;
+- do not modify Run101 in place;
+- next run must create a distinct Run102 candidate and a rollback first.
 
-Changes are limited to deterministic FFmpeg/FFprobe binary selection, bounded FFprobe failures, and ensuring import/proxy/export/output verification use the same validated media runtime. UI, R6, AI/OCR/Whisper and packaging are intentionally unchanged.
-
-Promotion rule: do not move main until candidate CI passes real fixture generation, probe, corrupt-input failure, timeout failure, proxy generation, export, output probe and decode smoke.
+Next recommended single macro-area: P0 project persistence/recovery — atomic state validation, corrupted project recovery, interrupted-write recovery and regression tests. Do not mix UI, R6, AI or packaging into that run.
