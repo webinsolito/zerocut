@@ -1,11 +1,9 @@
-# CURRENT MISSION
+# CURRENT MISSION — Run103 Concurrency Safety
 
-Run102 Project Recovery: VALIDATED AND PROMOTED.
+Base: validated Run102 Project Recovery.
+Candidate: Run103 Concurrency Safety.
+Single macro-area: optimistic project revision protection.
 
-Protected baseline for the next cycle:
-- current: Run102 Project Recovery;
-- rollback: Run101 Media Reliability;
-- do not modify Run102 in place;
-- next run must create a distinct Run103 candidate and rollback first.
+Stale writers that know the revision they started from must fail with PROJECT_REVISION_CONFLICT instead of overwriting newer project state. Long-running auto-edit analysis is revision-guarded before persistence. Timeline, subtitle and auto-edit mutation endpoints accept project_revision and return the resulting revision.
 
-Next recommended single macro-area: project/timeline concurrency safety. Protect user edits from being overwritten by background proxy/analysis jobs using revision-aware commits and regression tests. Do not mix UI, R6, AI or packaging into that run.
+Promotion requires Run100, Run101, Run102 and Run103 regression gates green.
