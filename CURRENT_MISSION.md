@@ -1,9 +1,7 @@
-# CURRENT MISSION — Run106 Timeline Reliability
+# CURRENT MISSION — Run107 A/V Integrity
 
-Base: validated Run105 Windows Media Roundtrip.
-Candidate: Run106 Timeline Reliability.
-Single macro-area: fail-closed timeline edit validation.
+Base: validated Run106 Timeline Reliability.
+Candidate: Run107 A/V Integrity.
+Single macro-area: output stream timing integrity.
 
-Reject NaN/infinite/reversed/out-of-range/too-short/duplicate-ID/oversized timelines instead of silently coercing them. Invalid selected segment falls back to a valid segment.
-
-Windows Run104/105 evidence remains preserved; this run uses Linux core regression plus timeline tests.
+Exports with expected audio must now pass video/audio start-time and duration-delta tolerances in addition to container probe and real decode smoke. A deliberately delayed-audio fixture must be rejected.

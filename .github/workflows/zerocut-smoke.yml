@@ -42,5 +42,8 @@ jobs:
       - name: Run106 timeline reliability
         if: hashFiles('src/ZeroCut_Run106_Candidate_TimelineReliability.pyw') != ''
         run: python tests/test_run106_timeline_reliability.py
+      - name: Run107 A/V integrity
+        if: hashFiles('src/ZeroCut_Run107_Candidate_AVIntegrity.pyw') != ''
+        run: python tests/test_run107_av_integrity.py
 
 
