@@ -1,9 +1,9 @@
-# CURRENT MISSION — Run104 Windows Core
+# CURRENT MISSION — Run105 Windows Media Roundtrip
 
-Base: validated Run103 Concurrency Safety.
-Candidate: Run104 Windows Core.
-Single macro-area: real Windows core filesystem/state certification.
+Base: validated Run104 Windows Core.
+Candidate: Run105 Windows Media Roundtrip.
+Single macro-area: real Windows FFmpeg media path.
 
-The Windows GitHub runner must import and compile the .pyw, persist/recover project state on NTFS, handle Unicode paths, reject traversal and perform revision-guarded atomic replacement.
+A Windows runner must generate a real H264/AAC fixture and exercise ZeroCut's FFprobe, preview-proxy generation, trimmed export, output probe and decode smoke using the validated FFmpeg/FFprobe binaries.
 
-This certifies a real Windows OS CI environment, not the user's physical PC/GPU.
+Promotion requires Windows Run104+Run105 and the Linux regression gate green.

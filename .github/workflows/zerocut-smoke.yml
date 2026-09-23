@@ -49,5 +49,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - name: Install FFmpeg Windows runtime
+        shell: pwsh
+        run: |
+          if (-not (Get-Command ffmpeg -ErrorAction SilentlyContinue)) {
+            choco install ffmpeg -y --no-progress
+          }
+          ffmpeg -version
+          ffprobe -version
       - name: Run104 Windows core certification
         run: python tests/test_run104_windows_core.py
+      - name: Run105 Windows media roundtrip
+        run: python tests/test_run105_windows_media_roundtrip.py
