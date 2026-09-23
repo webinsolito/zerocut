@@ -1,0 +1,60 @@
+{
+  "run": 102,
+  "name": "ProjectRecovery",
+  "date": "2026-09-23",
+  "base": {
+    "path": "src/ZeroCut_Run101_Candidate_MediaReliability.pyw",
+    "sha256": "240a1ab4b49a96b39d634c843bfa7ef199fd3d98c9131e882939df73d9c67c4e",
+    "git_commit": "654bc7ad8c973a96bbf67155567d60d71bef92fa"
+  },
+  "candidate": {
+    "path": "src/ZeroCut_Run102_Candidate_ProjectRecovery.pyw",
+    "sha256": "20db8033134b6a160046ca9b7c7e26dea4b74a24db6b23d70f12175188327003",
+    "branch": "candidate/run102-project-recovery",
+    "code_commit": "ecbeb19f3267b53a25c51ebc08b8d20c34a3d6a8",
+    "git_blob": "15bf6beb1506f75bd703dca6feb64fb5df517c37"
+  },
+  "rollback": {
+    "path": "rollback/Run101_MediaReliability.pyw",
+    "sha256": "240a1ab4b49a96b39d634c843bfa7ef199fd3d98c9131e882939df73d9c67c4e"
+  },
+  "macro_area": "P0 project persistence and crash recovery",
+  "changes": [
+    "validated project-state envelope before commit",
+    "atomic JSON write with flush+fsync+os.replace",
+    "last-known-good project backup",
+    "corrupt primary quarantine",
+    "interrupted temp-file recovery when newer than primary",
+    "stale temp rejection",
+    "backup restore when primary is missing/corrupt",
+    "state lock around load/save recovery path"
+  ],
+  "tests": {
+    "source_truth_run100": "PASS",
+    "run101_media_regression": "PASS",
+    "py_compile_run102": "PASS",
+    "module_import_run102": "PASS",
+    "normal_atomic_save_and_load": "PASS",
+    "corrupt_primary_recovery": "PASS",
+    "corrupt_primary_quarantine": "PASS",
+    "interrupted_newer_temp_recovery": "PASS",
+    "stale_temp_rejection": "PASS",
+    "invalid_semantic_state_rejected_before_commit": "PASS",
+    "missing_primary_backup_restore": "PASS",
+    "corrupt_primary_and_temp_backup_restore": "PASS"
+  },
+  "ci": {
+    "candidate_run_id": 35881184966,
+    "conclusion": "success",
+    "environment": "GitHub Actions ubuntu-24.04 / CPython 3.13 / apt FFmpeg"
+  },
+  "windows_real_test": false,
+  "gpu_real_test": false,
+  "regressions_detected": false,
+  "limitations": [
+    "Real Windows filesystem/locking/power-loss behavior not tested",
+    "No forced OS-level process kill during a physical disk flush on Windows",
+    "Recovery is tested at file-state level, not against an actual sudden machine power loss",
+    "GPU behavior unchanged and not tested in this run"
+  ]
+}

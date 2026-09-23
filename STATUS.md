@@ -1,21 +1,26 @@
 # ZeroCut Gaming AI — Status
 
-Updated 2026-09-23 after Run101.
+Updated 2026-09-23 after Run102.
 
 ## Current validated source
-- Run101: `src/ZeroCut_Run101_Candidate_MediaReliability.pyw`
-- SHA-256: `240a1ab4b49a96b39d634c843bfa7ef199fd3d98c9131e882939df73d9c67c4e`
-- Validated head before status commit: `1e2d49710c9b33678998d4472d58c85a2ec0b404`
-- Rollback: `rollback/Run100_StudioWorkspace.pyw`
-- Run100 rollback SHA-256: `66e756d74b1eaa66eea9446c09db5062bdcc8a55c893ee2d33c51105c9520d30`
+- Run102: `src/ZeroCut_Run102_Candidate_ProjectRecovery.pyw`
+- SHA-256: `20db8033134b6a160046ca9b7c7e26dea4b74a24db6b23d70f12175188327003`
+- Promoted code commit: `ecbeb19f3267b53a25c51ebc08b8d20c34a3d6a8`
+- Rollback: `rollback/Run101_MediaReliability.pyw`
+- Rollback SHA-256: `240a1ab4b49a96b39d634c843bfa7ef199fd3d98c9131e882939df73d9c67c4e`
 
-## Run101 result
-PASS on Ubuntu CI with a real locally generated H264/AAC fixture. The gate executed Python compile/import, exact FFmpeg/FFprobe selection, real FFprobe, corrupt-input rejection, timeout fail-closed behavior, real proxy generation, real trimmed export, output probe and decode smoke.
+## Run102 result
+PASS. Project persistence no longer silently resets to an empty project when the primary JSON is corrupt. The runtime now validates before commit, writes atomically, keeps a last-known-good backup, quarantines corrupted files, recovers newer completed temp writes after interruption, rejects stale temp files, and restores backup when the primary is missing or invalid.
+
+## Regression gates
+- Run100 source-truth smoke: PASS.
+- Run101 real media path regression: PASS.
+- Run102 project recovery integration: PASS.
 
 ## Important limits
 Windows real: NOT TESTED.
 GPU real: NOT TESTED.
-The successful Linux media gate does not certify Windows paths, native file picker, hardware encoders, permissions or target-machine performance.
+Physical power-loss/disk-controller behavior on a real Windows machine remains unverified.
 
-## Next P0
-Project persistence/recovery and crash-safe state handling, while preserving the now-validated media path.
+## Next P0/P1
+Timeline/project concurrency and optimistic revision protection across simultaneous background jobs and UI edits.
