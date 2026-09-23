@@ -1,9 +1,9 @@
-# CURRENT MISSION — Run103 Concurrency Safety
+# CURRENT MISSION — Run104 Windows Core
 
-Base: validated Run102 Project Recovery.
-Candidate: Run103 Concurrency Safety.
-Single macro-area: optimistic project revision protection.
+Base: validated Run103 Concurrency Safety.
+Candidate: Run104 Windows Core.
+Single macro-area: real Windows core filesystem/state certification.
 
-Stale writers that know the revision they started from must fail with PROJECT_REVISION_CONFLICT instead of overwriting newer project state. Long-running auto-edit analysis is revision-guarded before persistence. Timeline, subtitle and auto-edit mutation endpoints accept project_revision and return the resulting revision.
+The Windows GitHub runner must import and compile the .pyw, persist/recover project state on NTFS, handle Unicode paths, reject traversal and perform revision-guarded atomic replacement.
 
-Promotion requires Run100, Run101, Run102 and Run103 regression gates green.
+This certifies a real Windows OS CI environment, not the user's physical PC/GPU.
