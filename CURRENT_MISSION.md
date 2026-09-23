@@ -1,9 +1,9 @@
-# CURRENT MISSION — Run110 OCR Certification
+# CURRENT MISSION — Run111 Whisper Certification
 
-Base: validated Run109 R6 Evidence Gate.
-Candidate: Run110 OCR Certification.
-Single macro-area: real local RapidOCR inference.
+Base: validated Run110 OCR Certification.
+Candidate: Run111 Whisper Certification.
+Single macro-area: real local whisper.cpp inference.
 
-The gate installs ZeroCut's pinned RapidOCR + ONNX Runtime into tools/python, proves a real generic OCR inference, then OCRs a locally generated ROUND WON fixture and requires the R6 semantic classifier to recognize victory.
+The gate installs the pinned whisper.cpp binary and pinned tiny.en model, synthesizes spoken "Zero Cut" audio locally, requires semantic transcription, fingerprints exact binary/model SHA-256, then exercises ZeroCut's full media-to-transcript cache path.
 
-Package discovery alone is not a pass.
+Presence-only discovery is not a pass.
