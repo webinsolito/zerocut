@@ -9,9 +9,9 @@ def load():
 def main():
  py_compile.compile(str(CANDIDATE),doraise=True);m=load()
  # Fresh local runtime so this is an inference test, not package-presence theatre.
- vendor=ROOT/"tools"/"python"
+ vendor=m.ROOT/"tools"/"python"
  if vendor.exists(): shutil.rmtree(vendor)
- install=m.install_rapidocr_runtime(ROOT,timeout=300.0)
+ install=m.install_rapidocr_runtime(m.ROOT,timeout=300.0)
  assert install.get("ok") is True,install
  importlib.invalidate_caches()
  cap=m.discover_rapidocr()
