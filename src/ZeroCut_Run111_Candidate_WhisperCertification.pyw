@@ -29,7 +29,7 @@ from typing import Iterable
 WHISPER_RELEASE_TAG = "b5130"  # nightly referenced by stable whisper.cpp v1.9.4
 WHISPER_RELEASE_API = f"https://api.github.com/repos/ggml-org/whisper.cpp/releases/tags/{WHISPER_RELEASE_TAG}"
 WHISPER_MODEL_NAME = "ggml-tiny.en.bin"
-WHISPER_MODEL_URL = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.en.bin"
+WHISPER_MODEL_REVISION = "586cef1005a81109400c1bf73c3946fa5b353458"\nWHISPER_MODEL_URL = f"https://huggingface.co/ggerganov/whisper.cpp/resolve/{WHISPER_MODEL_REVISION}/ggml-tiny.en.bin"
 # Current upstream Xet object after the Dec 2025 tiny.en refresh. Fail closed if upstream changes.
 WHISPER_MODEL_SHA256 = "8729634ed8e45db72893c34a6c671a2eef06f551eaf1056b8fa92ab45008b425"
 WHISPER_MODEL_BYTES = 77_704_698
@@ -432,6 +432,7 @@ def runtime_manifest() -> dict:
             "release_api": WHISPER_RELEASE_API,
             "release_api_required_for_bootstrap": False,
             "model": WHISPER_MODEL_NAME,
+            "model_revision": WHISPER_MODEL_REVISION,
             "model_url": WHISPER_MODEL_URL,
             "model_sha256": WHISPER_MODEL_SHA256,
             "model_bytes": WHISPER_MODEL_BYTES,
