@@ -3,7 +3,7 @@ name: ZeroCut Source Truth Smoke
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, "candidate/**"]
     paths:
       - "src/**"
       - "rollback/**"
@@ -24,3 +24,6 @@ jobs:
           python-version: "3.13"
       - name: Verify recovered baseline
         run: python tests/test_source_truth.py
+      - name: Run101 media reliability integration
+        if: hashFiles('src/ZeroCut_Run101_Candidate_MediaReliability.pyw') != ''
+        run: python tests/test_run101_media_reliability.py

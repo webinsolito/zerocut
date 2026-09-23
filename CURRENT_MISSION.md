@@ -1,14 +1,11 @@
-# CURRENT MISSION
+# CURRENT MISSION — Run101 Candidate Validation
 
-P0 SOURCE-OF-TRUTH RECOVERY: COMPLETE.
+Base: Run100 Studio Workspace (validated source-of-truth).
+Candidate: Run101 Media Reliability.
+Branch: candidate/run101-media-reliability.
 
-Official baseline: Run100 Studio Workspace.
-Official rollback: Run99 FocusWorkspaceUX.
-Portable recovery CI: GREEN.
+Single macro-area: P0 core media reliability.
 
-Protected flow:
-IMPORT VIDEO → ANALYSIS/DETECTION → HIGHLIGHT SELECTION → TIMELINE/EDIT → PREVIEW → EXPORT.
+Changes are limited to deterministic FFmpeg/FFprobe binary selection, bounded FFprobe failures, and ensuring import/proxy/export/output verification use the same validated media runtime. UI, R6, AI/OCR/Whisper and packaging are intentionally unchanged.
 
-Next separate cycle: Run101, one P0 core-reliability macro-area only. Preserve Run100 unchanged as the validated baseline and create rollback before any Run101 modification.
-
-Priority for Run101: FFmpeg/FFprobe + import/export reliability and output probe, using real reproducible fixtures available in the environment. Do not claim Windows/GPU validation without the real environment.
+Promotion rule: do not move main until candidate CI passes real fixture generation, probe, corrupt-input failure, timeout failure, proxy generation, export, output probe and decode smoke.
