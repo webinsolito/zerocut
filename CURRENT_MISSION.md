@@ -1,7 +1,9 @@
-# CURRENT MISSION — Run108 Highlight Core
+# CURRENT MISSION — Run109 R6 Evidence Gate
 
-Base: validated Run107 A/V Integrity.
-Candidate: Run108 Highlight Core.
-Single macro-area: generic highlight ranking.
+Base: validated Run108 Highlight Core.
+Candidate: Run109 R6 Evidence Gate.
+Single macro-area: Rainbow Six semantic-event safety.
 
-Highlight candidates now require explicit audio/motion/scene evidence. Single-signal spikes are penalized, smart dead-air is excluded, and every candidate exposes evidence + confidence instead of pretending semantic understanding.
+Only explicit supported replay/timeline semantic events can become R6 automatic clips. Kills/headshots require replay confidence, duplicates are suppressed, unsupported signal-only events are rejected.
+
+No real R6 gameplay/replay fixture was found, so visual gameplay accuracy remains explicitly NOT CERTIFIED.
