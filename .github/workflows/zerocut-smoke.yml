@@ -33,3 +33,6 @@ jobs:
       - name: Run101 media reliability integration
         if: hashFiles('src/ZeroCut_Run101_Candidate_MediaReliability.pyw') != ''
         run: python tests/test_run101_media_reliability.py
+      - name: Run102 project recovery integration
+        if: hashFiles('src/ZeroCut_Run102_Candidate_ProjectRecovery.pyw') != ''
+        run: python tests/test_run102_project_recovery.py

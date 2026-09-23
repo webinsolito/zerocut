@@ -1,11 +1,11 @@
-# CURRENT MISSION
+# CURRENT MISSION — Run102 Candidate Validation
 
-Run101 Media Reliability: VALIDATED AND PROMOTED.
+Base: Run101 Media Reliability (validated on main).
+Candidate: Run102 Project Recovery.
+Branch: candidate/run102-project-recovery.
 
-Protected baseline for the next cycle:
-- current: Run101 Media Reliability;
-- rollback: Run100 Studio Workspace;
-- do not modify Run101 in place;
-- next run must create a distinct Run102 candidate and a rollback first.
+Single macro-area: P0 project persistence and crash recovery.
 
-Next recommended single macro-area: P0 project persistence/recovery — atomic state validation, corrupted project recovery, interrupted-write recovery and regression tests. Do not mix UI, R6, AI or packaging into that run.
+Run102 adds validated atomic project-state writes, last-known-good backup, corrupt-state quarantine, recovery from a fully-written interrupted temp file, stale-temp rejection and semantic state validation before commit.
+
+Promotion rule: Run100 source-truth smoke + Run101 media regression gate + Run102 recovery integration must all pass. UI, R6, AI/OCR/Whisper, GPU and packaging are intentionally unchanged.
