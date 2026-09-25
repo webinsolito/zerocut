@@ -14,6 +14,9 @@ assert "runtime\\python\\pythonw.exe" in text
 assert "sys.version_info >= (3, 11)" in text
 assert "runtime\\active_runtime.txt" in text
 assert "active_runtime.required.txt" in text
+assert "dependency_manifest_missing" in text
+assert "dependency_manifest_empty" in text
+assert "runtime_dependency_invalid:" in text
 assert "ZEROCUT_APP_OVERRIDE" in text
 assert "ZEROCUT_LAUNCHER_WAIT" in text
 assert "ZEROCUT_LAUNCHER_NO_PAUSE" in text
