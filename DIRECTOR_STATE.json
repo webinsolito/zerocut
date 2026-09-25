@@ -10,9 +10,10 @@
   "gate_weights": {"P0_windows_runtime":25,"P1_core_editing":25,"P2_ai_analysis":20,"P3_creator_engine":15,"P4_packaging_ux":15},
   "last_tests": {
     "run112_regression": "PASS: 44/44 from last verified run",
-    "run116_regression_added": "tests/test_run116_transcript_regression.py committed and CI wired",
-    "run116_source_review": "FAIL: /api/autoedit/cancel reads payload.get(project_revision) without first assigning payload = self._body_json()",
-    "run116_ci": "IN_PROGRESS after regression test commit; workflow update committed immediately after"
+    "run116_initial_ci": "FAIL: regression targeted the inherited Run112 autoedit/cancel route instead of the active Run113 handler",
+    "run116_active_handler_review": "PASS: Run113 intercepts /api/autoedit/cancel and reads payload=self._body_json() before project_revision; transcript apply has project revision guard and preview has TIMELINE_UNCHANGED guard",
+    "run116_regression_fix": "c458b204fe9dc714a302f6d4e6ef69e25947d0c1 tests the actual Run113 candidate and verifies a synthetic 10s timeline becomes shorter after explicit transcript removal",
+    "run116_ci_fix": "d1078a9369ce35f4b50d0b81e1a7330194278bbd runs the standalone Run116 regression in CI; workflow 36132400292 is IN_PROGRESS"
   },
   "benchmark_baseline": {"windows_real": "NOT_EXECUTED", "real_ps_r6_gameplay": "NOT_EXECUTED"},
   "implemented": [
@@ -22,16 +23,16 @@
     "Run114 computes before/after timeline duration and segment-count metrics",
     "Run114 refuses preview when proposed timeline is unchanged",
     "Run114 adds project revision conflict protection to transcript apply",
-    "Run115 intended revision-safe transcript/auto-edit cancel behavior",
-    "Run116 adds an executable regression gate for transcript analysis, apply revision safety and cancel payload handling",
-    "Run116 wires the new regression into GitHub Actions"
+    "Run115 makes the active Run113 transcript/auto-edit cancel handler revision-safe",
+    "Run116 adds executable regression for the active transcript handler",
+    "Run116 regression verifies explicit transcript removal produces a non-identical shorter timeline",
+    "Run116 CI executes the transcript regression without an undeclared pytest dependency"
   ],
   "blockers": [
-    "RED: current candidate source has /api/autoedit/cancel payload reference before request JSON is read; Run116 regression is designed to fail until fixed",
-    "Run113-115 candidate still needs executable regression before replacing Run112 as last-good",
+    "Run116 corrected CI is still in progress; do not promote or increase scores until it completes green",
     "Transcript segment selection controls are not yet rendered in browser UI",
     "Real Windows/PS5 R6 gameplay certification remains pending"
   ],
-  "next_action": "Fix /api/autoedit/cancel so it reads payload = self._body_json() before project_revision access, rerun Run116 CI to green, then continue transcript segment UI only if the gate passes.",
-  "updated_at": "2026-09-25T12:59:00+02:00"
+  "next_action": "Read workflow 36132400292 result. If green, close the Run116 regression gate and implement browser transcript segment selection with preview/apply/cancel plus before/after duration feedback; if red, fix that exact failing Run116 step before any UI work.",
+  "updated_at": "2026-09-25T14:00:30+02:00"
 }
