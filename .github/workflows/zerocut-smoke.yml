@@ -54,5 +54,6 @@ jobs:
       - name: Run111 real Whisper certification
         if: hashFiles('src/ZeroCut_Run111_Candidate_WhisperCertification.pyw') != ''
         run: python tests/test_run111_whisper_certification.py
-
-
+      - name: Run112 Whisper product UX
+        if: hashFiles('src/ZeroCut_Run112_Candidate_WhisperUX.pyw') != ''
+        run: python tests/test_run112_whisper_ux.py
