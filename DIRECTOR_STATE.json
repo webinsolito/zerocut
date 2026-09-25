@@ -4,17 +4,61 @@
   "current_candidate": "candidate/run119-windows-launcher-20260925",
   "last_good_commit": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
   "rollback": "rollback/pre-run119-windows-launcher-20260925",
-  "current_gate": "P0_WINDOWS_ONE_CLICK_LAUNCHER_NATIVE_CI",
+  "current_gate": "P0_WINDOWS_REAL_UI_CI",
   "completion_score": 75,
   "verification_score": 66,
-  "gate_weights": {"P0_windows_runtime":25,"P1_core_editing":25,"P2_ai_analysis":20,"P3_creator_engine":15,"P4_packaging_ux":15},
-  "last_tests": {
-    "run118_candidate": {"run_id":36138253394,"result":"PASS","input_duration":12,"edited_timeline_duration":9.5,"exported_duration":9.5,"av_sync":true,"decode":true},
-    "run118_post_promotion": {"run_id":36138517351,"sha":"5a4f3308148c2e530f2c450f0cad7d3aa2be340e","result":"PASS"},
-    "run119_native_fail": {"run_id":36150836818,"sha":"e909c22d6ddd8ce6e1266f9a3d90cca95bf9d140","result":"FAIL","cause":"launcher file contained literal escaped newline sequences and therefore omitted effective ZEROCUT_LAUNCH_DIR contract; Run101-118 regressions remained PASS"},
-    "run119_repair": {"sha":"1e9bb2f155cc748f628af142561896647e63070c","result":"PENDING_CI","changes":"real cmd newlines; Python>=3.11 gate; deterministic active runtime manifest; bundled FFmpeg PATH/ZEROCUT_LAUNCH_DIR integration; path-safe preflight; distinct error handling; process-handoff probe"}
+  "gate_weights": {
+    "P0_windows_runtime": 25,
+    "P1_core_editing": 25,
+    "P2_ai_analysis": 20,
+    "P3_creator_engine": 15,
+    "P4_packaging_ux": 15
   },
-  "benchmark_baseline": {"windows_real":"NATIVE_CI_PENDING_FOR_1e9bb2f","real_ps_r6_gameplay":"NOT_EXECUTED"},
+  "last_tests": {
+    "run118_candidate": {
+      "run_id": 36138253394,
+      "result": "PASS",
+      "input_duration": 12,
+      "edited_timeline_duration": 9.5,
+      "exported_duration": 9.5,
+      "av_sync": true,
+      "decode": true
+    },
+    "run118_post_promotion": {
+      "run_id": 36138517351,
+      "sha": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
+      "result": "PASS"
+    },
+    "run119_native_fail": {
+      "run_id": 36150836818,
+      "sha": "e909c22d6ddd8ce6e1266f9a3d90cca95bf9d140",
+      "result": "FAIL",
+      "cause": "launcher file contained literal escaped newline sequences and therefore omitted effective ZEROCUT_LAUNCH_DIR contract; Run101-118 regressions remained PASS"
+    },
+    "run119_repair": {
+      "sha": "1e9bb2f155cc748f628af142561896647e63070c",
+      "result": "PENDING_CI",
+      "changes": "real cmd newlines; Python>=3.11 gate; deterministic active runtime manifest; bundled FFmpeg PATH/ZEROCUT_LAUNCH_DIR integration; path-safe preflight; distinct error handling; process-handoff probe"
+    },
+    "run119_process_handoff": {
+      "run_id": 36151059168,
+      "sha": "0e44355e2479ad63554e91124cdace9f06e53450",
+      "result": "PASS",
+      "linux_regressions_through_run118": "PASS",
+      "windows_contract": "PASS",
+      "cmd_pythonw_process_handoff": "PASS"
+    },
+    "run119_ui_gate": {
+      "run_id": 36151129895,
+      "sha": "f4efb881fc0b67e7f12df43beb5a9f71957c3f0f",
+      "result": "QUEUED",
+      "scope": "active runtime --ai-status plus real --no-browser local UI HTTP readiness"
+    }
+  },
+  "benchmark_baseline": {
+    "windows_real": "NATIVE_PROCESS_HANDOFF_PASS_UI_HTTP_GATE_QUEUED",
+    "real_ps_r6_gameplay": "NOT_EXECUTED"
+  },
   "implemented": [
     "Run118 verified transcript preview/apply -> changed timeline -> real export/QC",
     "Run119 deterministic one-click launcher uses runtime/active_runtime.txt instead of filename guessing",
@@ -22,15 +66,18 @@
     "Run119 integrates bundled FFmpeg/ffprobe through PATH and ZEROCUT_LAUNCH_DIR consumed by active runtime",
     "Run119 path-safe runtime preflight prevents escaping package root and rejects missing/thin production runtime",
     "Run119 visible launcher log and distinct error codes for Python, manifest, runtime/preflight and launch failures",
-    "Run119 Windows CI executes real cmd -> pythonw -> probe process handoff in addition to static contract checks"
+    "Run119 Windows CI executes real cmd -> pythonw -> probe process handoff in addition to static contract checks",
+    "Run119 launcher forwards internal runtime arguments so CI can exercise the canonical app rather than only a stub",
+    "Run119 Windows gate now executes the active runtime --ai-status through ZeroCut.cmd",
+    "Run119 Windows gate launches the real local ZeroCut server and requires HTTP 200 with ZeroCut UI content before promotion"
   ],
   "blockers": [
-    "Run119 repaired launcher SHA 1e9bb2f must pass both native Windows smoke and Linux regression suite before promotion",
-    "Clean Windows host full UI-open certification remains pending",
+    "Run119 real active-runtime/UI Windows CI f4efb88 must complete green before promotion",
+    "Bundled/single-file Windows packaging remains pending after launcher gate",
     "Browser-driven transcript/export E2E remains pending",
     "Real PlayStation Rainbow Six gameplay certification remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Inspect CI for SHA 1e9bb2f155cc748f628af142561896647e63070c once. If FAIL, fix exact native launcher step on same candidate. If PASS, extend Windows smoke from probe handoff to active-runtime --no-browser health/UI-open check, rerun full regressions, then promote only after green.",
-  "updated_at": "2026-09-25T16:58:00+02:00"
+  "next_action": "Inspect Run119 UI CI run 36151129895 once. If FAIL, fix the exact active-runtime/FFmpeg/UI readiness step on the same candidate; if PASS, promote the verified Run119 Windows launcher slice to main, record rollback/state, then open the bundled/single-file Windows packaging gate.",
+  "updated_at": "2026-09-25T17:00:00+02:00"
 }
