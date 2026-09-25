@@ -7,7 +7,8 @@ set "ZC_LOG=%~dp0zerocut-launcher.log"
 set "ZC_PYTHON="
 set "ZC_PYTHONW="
 set "ZC_APP="
-set "ZC_APP_ABS="\nset "ZEROCUT_ROOT=%~dp0"
+set "ZC_APP_ABS="
+set "ZEROCUT_ROOT=%~dp0"
 
 rem Prefer bundled Python so the final Windows package does not depend on user PATH.
 if exist "%~dp0runtime\python\python.exe" set "ZC_PYTHON=%~dp0runtime\python\python.exe"
@@ -16,7 +17,11 @@ if not defined ZC_PYTHON for /f "delims=" %%I in ('where python.exe 2^>nul') do 
 if not defined ZC_PYTHONW for /f "delims=" %%I in ('where pythonw.exe 2^>nul') do if not defined ZC_PYTHONW set "ZC_PYTHONW=%%I"
 if not defined ZC_PYTHON if defined ZC_PYTHONW set "ZC_PYTHON=%ZC_PYTHONW%"
 if not defined ZC_PYTHONW if defined ZC_PYTHON set "ZC_PYTHONW=%ZC_PYTHON%"
-if not defined ZC_PYTHON goto :no_python\n"%ZC_PYTHON%" -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>>"%ZC_LOG%"\nif errorlevel 1 goto :python_version\n\nrem Source of truth: explicit full-runtime manifest. Test override is isolated and opt-in.
+if not defined ZC_PYTHON goto :no_python
+"%ZC_PYTHON%" -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>>"%ZC_LOG%"
+if errorlevel 1 goto :python_version
+
+rem Source of truth: explicit full-runtime manifest. Test override is isolated and opt-in.
 if defined ZEROCUT_APP_OVERRIDE (
   set "ZC_APP=%ZEROCUT_APP_OVERRIDE%"
 ) else (
@@ -24,12 +29,16 @@ if defined ZEROCUT_APP_OVERRIDE (
   set /p ZC_APP=<"%~dp0runtime\active_runtime.txt"
 )
 if not defined ZC_APP goto :no_app
-for %%F in ("%ZC_APP%") do set "ZC_APP_ABS=%%~fF"\nset "ZEROCUT_APP_ABS=%ZC_APP_ABS%"
+for %%F in ("%ZC_APP%") do set "ZC_APP_ABS=%%~fF"
+set "ZEROCUT_APP_ABS=%ZC_APP_ABS%"
 
-rem Prefer private media/AI tools without requiring PATH changes.
-if exist "%~dp0runtime\ffmpeg\bin\ffmpeg.exe" set "ZEROCUT_FFMPEG=%~dp0runtime\ffmpeg\bin\ffmpeg.exe"
-if exist "%~dp0runtime\ffmpeg\bin\ffprobe.exe" set "ZEROCUT_FFPROBE=%~dp0runtime\ffmpeg\bin\ffprobe.exe"
-if exist "%~dp0runtime\whisper" set "ZEROCUT_WHISPER_HOME=%~dp0runtime\whisper"
+rem Integrate bundled FFmpeg with the contract consumed by the active ZeroCut runtime.
+if exist "%~dp0runtime\ffmpeg\bin\ffmpeg.exe" if exist "%~dp0runtime\ffmpeg\bin\ffprobe.exe" (
+  set "ZEROCUT_LAUNCH_DIR=%~dp0runtime\ffmpeg\bin"
+  set "ZEROCUT_FFMPEG=%~dp0runtime\ffmpeg\bin\ffmpeg.exe"
+  set "ZEROCUT_FFPROBE=%~dp0runtime\ffmpeg\bin\ffprobe.exe"
+  set "PATH=%~dp0runtime\ffmpeg\bin;%PATH%"
+)
 
 rem Preflight: file must exist, remain inside the package, and the real runtime must be substantial.
 "%ZC_PYTHON%" -c "import os; from pathlib import Path; root=Path(os.environ['ZEROCUT_ROOT']).resolve(); p=Path(os.environ['ZEROCUT_APP_ABS']).resolve(); assert p.is_relative_to(root) and p.is_file(); assert os.environ.get('ZEROCUT_APP_OVERRIDE') or p.stat().st_size > 100000" >nul 2>>"%ZC_LOG%"
@@ -49,6 +58,12 @@ exit /b 0
 echo ZeroCut non trova il runtime Python. Ripristina il pacchetto Windows completo.
 if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
 exit /b 2
+
+:python_version
+>>"%ZC_LOG%" echo [%date% %time%] Versione Python non supportata.
+echo ZeroCut richiede Python 3.11 o superiore. Ripristina il pacchetto Windows completo.
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
+exit /b 7
 
 :no_manifest
 >>"%ZC_LOG%" echo [%date% %time%] Manifest runtime mancante.
