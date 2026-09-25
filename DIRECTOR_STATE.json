@@ -1,10 +1,10 @@
 {
   "schema": 2,
   "current_run": 120,
-  "current_candidate": "candidate/run120-windows-onefile-20260925",
+  "current_candidate": "candidate/run120-windows-onefile-clean-20260925",
   "last_good_commit": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
-  "rollback": "rollback/pre-run120-windows-onefile-20260925",
-  "current_gate": "P4_WINDOWS_ONEFILE_BUILD_AND_UI_CI",
+  "rollback": "rollback/pre-run120-promotion-20260925-1518",
+  "current_gate": "P4_WINDOWS_ONEFILE_CLEAN_CANDIDATE_CI",
   "completion_score": 80,
   "verification_score": 74,
   "gate_weights": {
@@ -50,11 +50,28 @@
       "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
       "result": "IN_PROGRESS",
       "scope": "PyInstaller one-file build + --ai-status smoke + packaged UI readiness/health + artifact"
+    },
+    "run120_onefile_verified_source": {
+      "run_id": 36152761535,
+      "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
+      "result": "PASS",
+      "exe_bytes": 9735398,
+      "exe_sha256": "2ef803fb35c3da5fad4a4ae2a1b52c991faef14778c6eb1d9f7f26509c665c18",
+      "packaged_ai_status": "PASS",
+      "packaged_ui_readiness": "PASS",
+      "artifact_id": 10872227008,
+      "artifact_name": "ZeroCut-Windows-OneFile-ba1e081cebe915d16d61efb6b14097374e8536b0"
+    },
+    "run120_clean_candidate": {
+      "run_id": 36154179847,
+      "sha": "da273d3d88e6e0cdde701b95d82620db1e7666ab",
+      "result": "IN_PROGRESS",
+      "note": "same verified packaging files rebased as a single clean commit directly on current main"
     }
   },
   "benchmark_baseline": {
     "windows_real": "RUN119_NATIVE_UI_PASS_AND_PROMOTED",
-    "windows_onefile": "BUILD_AND_REAL_UI_CI_IN_PROGRESS",
+    "windows_onefile": "EXE_REAL_BUILD_UI_PASS_CLEAN_REBASE_CI_IN_PROGRESS",
     "real_ps_r6_gameplay": "NOT_EXECUTED"
   },
   "implemented": [
@@ -69,11 +86,11 @@
     "Run120 one-file spec explicitly includes dynamically loaded runtime imports and disables UPX"
   ],
   "blockers": [
-    "Run120 one-file build/UI CI 36152761535 must complete green before promotion",
+    "Run120 clean candidate CI 36154179847 must complete green before promotion",
     "Real PlayStation Rainbow Six gameplay certification remains pending",
     "Browser-driven transcript/export E2E remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Inspect Run120 one-file CI 36152761535 once. If FAIL, fix the exact PyInstaller/build/packaged-UI step on candidate/run120-windows-onefile-20260925. If PASS, record ZeroCut.exe size/SHA256/artifact, promote the verified packaging slice, then return priority to real PlayStation/Rainbow Six end-to-end certification.",
-  "updated_at": "2026-09-25T17:15:00+02:00"
+  "next_action": "Inspect clean Run120 CI 36154179847 once. If FAIL, fix the exact build/runtime/UI step on candidate/run120-windows-onefile-clean-20260925. If PASS, fast-forward main to da273d3, verify post-promotion main CI, record the promoted ZeroCut.exe artifact evidence, then move priority to real PlayStation/Rainbow Six end-to-end certification.",
+  "updated_at": "2026-09-25T17:27:00+02:00"
 }
