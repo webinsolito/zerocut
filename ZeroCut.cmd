@@ -7,7 +7,7 @@ set "ZC_LOG=%~dp0zerocut-launcher.log"
 set "ZC_PYTHON="
 set "ZC_PYTHONW="
 set "ZC_APP="
-set "ZC_APP_ABS="
+set "ZC_APP_ABS="\nset "ZEROCUT_ROOT=%~dp0"
 
 rem Prefer bundled Python so the final Windows package does not depend on user PATH.
 if exist "%~dp0runtime\python\python.exe" set "ZC_PYTHON=%~dp0runtime\python\python.exe"
@@ -24,7 +24,7 @@ if defined ZEROCUT_APP_OVERRIDE (
   set /p ZC_APP=<"%~dp0runtime\active_runtime.txt"
 )
 if not defined ZC_APP goto :no_app
-for %%F in ("%ZC_APP%") do set "ZC_APP_ABS=%%~fF"
+for %%F in ("%ZC_APP%") do set "ZC_APP_ABS=%%~fF"\nset "ZEROCUT_APP_ABS=%ZC_APP_ABS%"
 
 rem Prefer private media/AI tools without requiring PATH changes.
 if exist "%~dp0runtime\ffmpeg\bin\ffmpeg.exe" set "ZEROCUT_FFMPEG=%~dp0runtime\ffmpeg\bin\ffmpeg.exe"
@@ -32,7 +32,7 @@ if exist "%~dp0runtime\ffmpeg\bin\ffprobe.exe" set "ZEROCUT_FFPROBE=%~dp0runtime
 if exist "%~dp0runtime\whisper" set "ZEROCUT_WHISPER_HOME=%~dp0runtime\whisper"
 
 rem Preflight: file must exist, remain inside the package, and the real runtime must be substantial.
-"%ZC_PYTHON%" -c "from pathlib import Path; root=Path(r'%~dp0').resolve(); p=Path(r'%ZC_APP_ABS%').resolve(); assert p.is_relative_to(root) and p.is_file(); assert bool(r'%ZEROCUT_APP_OVERRIDE%') or p.stat().st_size > 100000" >nul 2>>"%ZC_LOG%"
+"%ZC_PYTHON%" -c "import os; from pathlib import Path; root=Path(os.environ['ZEROCUT_ROOT']).resolve(); p=Path(os.environ['ZEROCUT_APP_ABS']).resolve(); assert p.is_relative_to(root) and p.is_file(); assert os.environ.get('ZEROCUT_APP_OVERRIDE') or p.stat().st_size > 100000" >nul 2>>"%ZC_LOG%"
 if errorlevel 1 goto :runtime_error
 
 rem CI can wait for a short probe; normal user launch returns immediately with no terminal left open.
