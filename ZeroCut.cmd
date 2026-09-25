@@ -1,54 +1,77 @@
 @echo off
-setlocal EnableExtensions EnableDelayedExpansion
+setlocal EnableExtensions
 cd /d "%~dp0"
 
 rem ZeroCut one-click Windows launcher. Prefer fully local/bundled runtimes.
 set "ZC_LOG=%~dp0zerocut-launcher.log"
+set "ZC_PYTHON="
 set "ZC_PYTHONW="
 set "ZC_APP="
+set "ZC_APP_ABS="
 
-rem PASS 1: bundled Python first, then system Python as a compatibility fallback.
-for %%P in ("%~dp0runtime\python\pythonw.exe" "%~dp0runtime\python\python.exe") do if not defined ZC_PYTHONW if exist "%%~P" set "ZC_PYTHONW=%%~P"
-if not defined ZC_PYTHONW for %%P in (pythonw.exe python.exe) do if not defined ZC_PYTHONW for /f "delims=" %%I in ('where %%P 2^>nul') do if not defined ZC_PYTHONW set "ZC_PYTHONW=%%I"
-if not defined ZC_PYTHONW goto :no_python
+rem Prefer bundled Python so the final Windows package does not depend on user PATH.
+if exist "%~dp0runtime\python\python.exe" set "ZC_PYTHON=%~dp0runtime\python\python.exe"
+if exist "%~dp0runtime\python\pythonw.exe" set "ZC_PYTHONW=%~dp0runtime\python\pythonw.exe"
+if not defined ZC_PYTHON for /f "delims=" %%I in ('where python.exe 2^>nul') do if not defined ZC_PYTHON set "ZC_PYTHON=%%I"
+if not defined ZC_PYTHONW for /f "delims=" %%I in ('where pythonw.exe 2^>nul') do if not defined ZC_PYTHONW set "ZC_PYTHONW=%%I"
+if not defined ZC_PYTHON if defined ZC_PYTHONW set "ZC_PYTHON=%ZC_PYTHONW%"
+if not defined ZC_PYTHONW if defined ZC_PYTHON set "ZC_PYTHONW=%ZC_PYTHON%"
+if not defined ZC_PYTHON goto :no_python
 
-rem Select newest candidate runtime without hard-coding a run number.
-for /f "delims=" %%F in ('dir /b /o-n "src\ZeroCut_Run*_Candidate_*.pyw" 2^>nul') do if not defined ZC_APP set "ZC_APP=src\%%F"
+rem Source of truth: explicit full-runtime manifest. Test override is isolated and opt-in.
+if defined ZEROCUT_APP_OVERRIDE (
+  set "ZC_APP=%ZEROCUT_APP_OVERRIDE%"
+) else (
+  if not exist "%~dp0runtime\active_runtime.txt" goto :no_manifest
+  set /p ZC_APP=<"%~dp0runtime\active_runtime.txt"
+)
 if not defined ZC_APP goto :no_app
+for %%F in ("%ZC_APP%") do set "ZC_APP_ABS=%%~fF"
 
-rem PASS 2: prefer private media/AI tools, but preserve PATH fallback inside the app.
+rem Prefer private media/AI tools without requiring PATH changes.
 if exist "%~dp0runtime\ffmpeg\bin\ffmpeg.exe" set "ZEROCUT_FFMPEG=%~dp0runtime\ffmpeg\bin\ffmpeg.exe"
 if exist "%~dp0runtime\ffmpeg\bin\ffprobe.exe" set "ZEROCUT_FFPROBE=%~dp0runtime\ffmpeg\bin\ffprobe.exe"
 if exist "%~dp0runtime\whisper" set "ZEROCUT_WHISPER_HOME=%~dp0runtime\whisper"
 
-rem Preflight selected runtime so a broken package fails visibly instead of silently.
-"%ZC_PYTHONW%" -c "import pathlib; p=pathlib.Path(r'%~dp0%ZC_APP%'); assert p.is_file() and p.stat().st_size > 100000" >nul 2>>"%ZC_LOG%"
+rem Preflight: file must exist, remain inside the package, and the real runtime must be substantial.
+"%ZC_PYTHON%" -c "from pathlib import Path; root=Path(r'%~dp0').resolve(); p=Path(r'%ZC_APP_ABS%').resolve(); assert p.is_relative_to(root) and p.is_file(); assert bool(r'%ZEROCUT_APP_OVERRIDE%') or p.stat().st_size > 100000" >nul 2>>"%ZC_LOG%"
 if errorlevel 1 goto :runtime_error
 
-start "ZeroCut" /d "%~dp0" "%ZC_PYTHONW%" "%~dp0%ZC_APP%"
+rem CI can wait for a short probe; normal user launch returns immediately with no terminal left open.
+if defined ZEROCUT_LAUNCHER_WAIT (
+  start "ZeroCut" /wait /d "%~dp0" "%ZC_PYTHONW%" "%ZC_APP_ABS%"
+) else (
+  start "ZeroCut" /d "%~dp0" "%ZC_PYTHONW%" "%ZC_APP_ABS%"
+)
 if errorlevel 1 goto :launch_error
 exit /b 0
 
 :no_python
->"%ZC_LOG%" echo [%date% %time%] Python runtime non trovato.
-echo ZeroCut non trova il runtime Python. Il pacchetto Windows completo deve includere runtime\python.
-pause
+>>"%ZC_LOG%" echo [%date% %time%] Python runtime non trovato.
+echo ZeroCut non trova il runtime Python. Ripristina il pacchetto Windows completo.
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
 exit /b 2
 
+:no_manifest
+>>"%ZC_LOG%" echo [%date% %time%] Manifest runtime mancante.
+echo Configurazione ZeroCut incompleta: runtime\active_runtime.txt mancante.
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
+exit /b 6
+
 :no_app
->"%ZC_LOG%" echo [%date% %time%] Runtime ZeroCut non trovato.
-echo File principale ZeroCut non trovato. Ripristina il pacchetto completo.
-pause
+>>"%ZC_LOG%" echo [%date% %time%] Runtime ZeroCut non configurato.
+echo File principale ZeroCut non configurato.
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
 exit /b 3
 
 :runtime_error
->>"%ZC_LOG%" echo [%date% %time%] Preflight runtime fallito: %ZC_APP%
+>>"%ZC_LOG%" echo [%date% %time%] Preflight runtime fallito: %ZC_APP_ABS%
 echo ZeroCut non puo avviarsi: controllo runtime fallito. Dettagli in zerocut-launcher.log.
-pause
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
 exit /b 4
 
 :launch_error
->>"%ZC_LOG%" echo [%date% %time%] Avvio fallito: %ZC_APP%
+>>"%ZC_LOG%" echo [%date% %time%] Avvio fallito: %ZC_APP_ABS%
 echo ZeroCut non e riuscito ad avviarsi. Dettagli in zerocut-launcher.log.
-pause
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
 exit /b 5
