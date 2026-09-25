@@ -9,6 +9,7 @@ on:
       - "rollback/**"
       - "reports/**"
       - "tests/**"
+      - "ZeroCut.cmd"
       - "STATUS.md"
       - "CURRENT_MISSION.md"
       - ".github/workflows/zerocut-smoke.yml"
@@ -63,3 +64,22 @@ jobs:
         run: python tests/test_run117_transcript_ui.py
       - name: Run118 edited timeline real export and QC
         run: python tests/test_run118_export_qc.py
+      - name: Run119 Windows launcher contract
+        run: python tests/test_run119_windows_launcher.py
+
+  windows-launcher-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Validate launcher contract on Windows
+        shell: pwsh
+        run: python tests/test_run119_windows_launcher.py
+      - name: Verify cmd parser can resolve runtime
+        shell: cmd
+        run: |
+          dir /b src\ZeroCut_Run*_Candidate_*.pyw
+          where pythonw.exe
