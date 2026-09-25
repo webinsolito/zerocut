@@ -86,7 +86,7 @@ jobs:
           $target = Join-Path $PWD $rel
           if (!(Test-Path $target)) { throw "Configured runtime missing: $target" }
           $required = Get-Content runtime\active_runtime.required.txt | Where-Object { $_.Trim() }
-          if ($required.Count -lt 5) { throw "Runtime dependency manifest incomplete" }
+          if ($required.Count -lt 6) { throw "Runtime dependency manifest incomplete" }
           foreach ($item in $required) {
             $path = Join-Path $PWD $item.Trim()
             if (!(Test-Path $path)) { throw "Runtime dependency missing: $item" }
@@ -129,46 +129,22 @@ jobs:
           $dir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
           ffmpeg -version
           ffprobe -version
-      - name: Launch actual ZeroCut local UI
+      - name: Launch and certify actual ZeroCut local UI in one step
         shell: cmd
         env:
           ZEROCUT_LAUNCHER_NO_PAUSE: "1"
+          ZEROCUT_LAUNCHER_VERIFY_READY: "1"
           ZEROCUT_HOME: ${{ github.workspace }}\\run119-home
           ZEROCUT_READY_FILE: ${{ github.workspace }}\\run119-ready.json
         run: |
           call ZeroCut.cmd --no-browser --port 18765 --ready-file "%ZEROCUT_READY_FILE%"
-          if errorlevel 1 exit /b %errorlevel%
-      - name: Verify actual runtime readiness and UI endpoints
-        shell: pwsh
-        env:
-          ZEROCUT_READY_FILE: ${{ github.workspace }}\\run119-ready.json
-          ZEROCUT_HOME: ${{ github.workspace }}\\run119-home
-        run: |
-          $deadline = (Get-Date).AddSeconds(45)
-          do {
-            if (Test-Path $env:ZEROCUT_READY_FILE) {
-              try {
-                $ready = Get-Content $env:ZEROCUT_READY_FILE -Raw | ConvertFrom-Json
-                if ($ready.ok -and $ready.url -and $ready.pid) { break }
-              } catch {}
-            }
-            Start-Sleep -Milliseconds 500
-          } while ((Get-Date) -lt $deadline)
-          if (!(Test-Path $env:ZEROCUT_READY_FILE)) {
-            Get-Process python* -ErrorAction SilentlyContinue | Format-Table -AutoSize
-            Get-ChildItem $env:ZEROCUT_HOME -Recurse -ErrorAction SilentlyContinue | Select-Object FullName,Length
-            if (Test-Path "$env:ZEROCUT_HOME\\project\\diagnostics\\startup-crash.log") { Get-Content "$env:ZEROCUT_HOME\\project\\diagnostics\\startup-crash.log" }
-            if (Test-Path "$env:ZEROCUT_HOME\\project\\diagnostics\\ffmpeg-bootstrap-error.log") { Get-Content "$env:ZEROCUT_HOME\\project\\diagnostics\\ffmpeg-bootstrap-error.log" }
-            throw "ZeroCut readiness handshake not created"
-          }
-          $ready = Get-Content $env:ZEROCUT_READY_FILE -Raw | ConvertFrom-Json
-          $health = Invoke-RestMethod -Uri ($ready.url + "/api/health") -TimeoutSec 5
-          if (!$health.ok -or $health.runtime -ne "Run119_WindowsReadiness") { throw "Health endpoint invalid" }
-          $ui = Invoke-WebRequest -Uri ($ready.url + "/") -UseBasicParsing -TimeoutSec 5
-          if ($ui.StatusCode -ne 200 -or $ui.Content -notmatch "ZeroCut") { throw "UI endpoint invalid" }
-          Write-Host "ZEROCUT_RUN119_READY_URL=$($ready.url)"
-          Write-Host "ZEROCUT_RUN119_READY_PID=$($ready.pid)"
-          Write-Host "ZEROCUT_RUN119_UI_ENDPOINT=PASS"
+          if errorlevel 1 (
+            type zerocut-launcher.log
+            exit /b %errorlevel%
+          )
+          if not exist "%ZEROCUT_READY_FILE%" exit /b 21
+          type zerocut-launcher.log
+          type "%ZEROCUT_READY_FILE%"
       - name: Stop ZeroCut UI smoke
         if: always()
         shell: pwsh
