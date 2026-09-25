@@ -16,9 +16,7 @@ if not defined ZC_PYTHON for /f "delims=" %%I in ('where python.exe 2^>nul') do 
 if not defined ZC_PYTHONW for /f "delims=" %%I in ('where pythonw.exe 2^>nul') do if not defined ZC_PYTHONW set "ZC_PYTHONW=%%I"
 if not defined ZC_PYTHON if defined ZC_PYTHONW set "ZC_PYTHON=%ZC_PYTHONW%"
 if not defined ZC_PYTHONW if defined ZC_PYTHON set "ZC_PYTHONW=%ZC_PYTHON%"
-if not defined ZC_PYTHON goto :no_python
-
-rem Source of truth: explicit full-runtime manifest. Test override is isolated and opt-in.
+if not defined ZC_PYTHON goto :no_python\n"%ZC_PYTHON%" -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>>"%ZC_LOG%"\nif errorlevel 1 goto :python_version\n\nrem Source of truth: explicit full-runtime manifest. Test override is isolated and opt-in.
 if defined ZEROCUT_APP_OVERRIDE (
   set "ZC_APP=%ZEROCUT_APP_OVERRIDE%"
 ) else (
