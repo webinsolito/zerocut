@@ -4,7 +4,7 @@ import runpy
 import sys
 from pathlib import Path
 
-ACTIVE_RUNTIME = "ZeroCut_Run119_Candidate_WindowsReadiness.pyw"
+ACTIVE_RUNTIME = "ZeroCut_Run121_Candidate_GameplayDirector.pyw"
 
 def bundle_root() -> Path:
     frozen_root = getattr(sys, "_MEIPASS", None)
