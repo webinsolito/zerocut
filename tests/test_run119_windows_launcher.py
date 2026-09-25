@@ -1,10 +1,12 @@
 from pathlib import Path
+import py_compile
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
 LAUNCHER = ROOT / "ZeroCut.cmd"
 MANIFEST = ROOT / "runtime" / "active_runtime.txt"
 REQUIRED = ROOT / "runtime" / "active_runtime.required.txt"
+READY_CHECK = ROOT / "runtime" / "verify_ready.py"
 PROBE = ROOT / "tests" / "run119_launcher_probe.pyw"
 text = LAUNCHER.read_text(encoding="utf-8")
 
@@ -19,6 +21,9 @@ assert "dependency_manifest_empty" in text
 assert "runtime_dependency_invalid:" in text
 assert "ZEROCUT_APP_OVERRIDE" in text
 assert "ZEROCUT_LAUNCHER_WAIT" in text
+assert "ZEROCUT_LAUNCHER_VERIFY_READY" in text
+assert "ZEROCUT_READY_FILE" in text
+assert "runtime\\verify_ready.py" in text
 assert "ZEROCUT_LAUNCHER_NO_PAUSE" in text
 assert "ZEROCUT_LAUNCH_DIR" in text
 assert "runtime\\ffmpeg\\bin" in text
@@ -32,10 +37,12 @@ assert "os.environ['ZEROCUT_APP_ABS']" in text
 assert "p.is_relative_to(root)" in text
 assert 'start "ZeroCut"' in text
 assert '"%ZC_APP_ABS%" %*' in text
-for code in (0, 2, 3, 4, 5, 6, 7):
+for code in (0, 2, 3, 4, 5, 6, 7, 8):
     assert f"exit /b {code}" in text
 
 assert PROBE.is_file(), "Missing Windows process handoff probe"
+assert READY_CHECK.is_file(), "Missing same-step readiness verifier"
+py_compile.compile(str(READY_CHECK), doraise=True)
 assert MANIFEST.is_file(), "Missing active runtime manifest"
 assert REQUIRED.is_file(), "Missing runtime dependency manifest"
 
@@ -49,8 +56,9 @@ assert target.name == "ZeroCut_Run119_Candidate_WindowsReadiness.pyw"
 
 required_rows = [x.strip() for x in REQUIRED.read_text(encoding="utf-8").splitlines() if x.strip()]
 assert required_rows[0].endswith("ZeroCut_Run119_Candidate_WindowsReadiness.pyw")
+assert any(x.endswith("runtime\\verify_ready.py") for x in required_rows)
 required_paths = [(ROOT / Path(x.replace("\\", "/"))).resolve() for x in required_rows]
-assert len(required_paths) >= 5
+assert len(required_paths) >= 6
 assert all(p.is_relative_to(ROOT.resolve()) and p.is_file() and p.stat().st_size > 500 for p in required_paths)
 
 runtime_text = target.read_text(encoding="utf-8")
@@ -58,6 +66,11 @@ assert "ZeroCut_Run118_Candidate_ExportQC.pyw" in runtime_text
 assert "--ready-file" in runtime_text
 assert '"/api/health"' in runtime_text
 assert "os.replace(tmp, READY_FILE)" in runtime_text
+ready_text = READY_CHECK.read_text(encoding="utf-8")
+assert 'url + "/api/health"' in ready_text
+assert 'url + "/"' in ready_text
+assert "ZEROCUT_READY_CHECK=PASS" in ready_text
+
 chain_text = "\n".join(p.read_text(encoding="utf-8") for p in required_paths)
 assert "zerocut-export-qc-run118" in chain_text, "Export QC wrapper missing"
 assert "zerocut-transcript-editor-run117" in chain_text, "Transcript UI wrapper missing"
