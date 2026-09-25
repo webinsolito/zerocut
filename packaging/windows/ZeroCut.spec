@@ -3,6 +3,7 @@ from pathlib import Path
 ROOT = Path(SPECPATH).parents[1]
 SRC = ROOT / "src"
 CHAIN = [
+    "ZeroCut_Run121_Candidate_GameplayDirector.pyw",
     "ZeroCut_Run119_Candidate_WindowsReadiness.pyw",
     "ZeroCut_Run118_Candidate_ExportQC.pyw",
     "ZeroCut_Run117_Candidate_TranscriptUI.pyw",
