@@ -4,7 +4,7 @@
   "current_candidate": "candidate/run119-windows-launcher-20260925",
   "last_good_commit": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
   "rollback": "rollback/pre-run119-windows-launcher-20260925",
-  "current_gate": "P0_WINDOWS_REAL_UI_CI",
+  "current_gate": "P0_WINDOWS_REAL_UI_READINESS_FINAL_CI",
   "completion_score": 75,
   "verification_score": 66,
   "gate_weights": {
@@ -51,12 +51,22 @@
     "run119_ui_gate": {
       "run_id": 36151129895,
       "sha": "f4efb881fc0b67e7f12df43beb5a9f71957c3f0f",
-      "result": "QUEUED",
-      "scope": "active runtime --ai-status plus real --no-browser local UI HTTP readiness"
+      "result": "FAIL",
+      "linux_regressions_through_run118": "PASS",
+      "windows_process_handoff": "PASS",
+      "active_runtime_status": "PASS",
+      "ffmpeg_fixture": "PASS",
+      "failure": "fixed-port HTTP probe did not observe UI; runtime already supports port fallback and CI did not know actual selected port"
+    },
+    "run119_readiness_fix": {
+      "run_id": 36151873619,
+      "sha": "5d8f1b8ad37f30e1f6732c8da9b46134c8684bf9",
+      "result": "IN_PROGRESS",
+      "changes": "Run119 wrapper over verified Run118 chain; atomic ready-file with actual selected port/PID; /api/health; explicit runtime dependency manifest; fail-closed launcher preflight; CI probes actual ready URL"
     }
   },
   "benchmark_baseline": {
-    "windows_real": "NATIVE_PROCESS_HANDOFF_PASS_UI_HTTP_GATE_QUEUED",
+    "windows_real": "PROCESS_HANDOFF_PASS_REAL_UI_READINESS_FINAL_CI_IN_PROGRESS",
     "real_ps_r6_gameplay": "NOT_EXECUTED"
   },
   "implemented": [
@@ -69,15 +79,21 @@
     "Run119 Windows CI executes real cmd -> pythonw -> probe process handoff in addition to static contract checks",
     "Run119 launcher forwards internal runtime arguments so CI can exercise the canonical app rather than only a stub",
     "Run119 Windows gate now executes the active runtime --ai-status through ZeroCut.cmd",
-    "Run119 Windows gate launches the real local ZeroCut server and requires HTTP 200 with ZeroCut UI content before promotion"
+    "Run119 Windows gate launches the real local ZeroCut server and requires HTTP 200 with ZeroCut UI content before promotion",
+    "Run119 readiness wrapper layers over Run118 so transcript edit and export QC remain active",
+    "Run119 writes atomic readiness JSON with actual bound port and PID after successful server bind",
+    "Run119 exposes lightweight /api/health for Windows startup/package certification",
+    "Run119 active_runtime.required.txt explicitly protects the full 119->118->117->113->112 dependency chain",
+    "Run119 launcher fails closed when dependency manifest is missing, empty, escapes package root or contains invalid files",
+    "Run119 Windows CI probes the actual selected URL instead of assuming the requested port"
   ],
   "blockers": [
-    "Run119 real active-runtime/UI Windows CI f4efb88 must complete green before promotion",
-    "Bundled/single-file Windows packaging remains pending after launcher gate",
+    "Final Run119 CI 36151873619 must complete green before promotion",
+    "Bundled/single-file Windows packaging remains pending after launcher/UI gate",
     "Browser-driven transcript/export E2E remains pending",
     "Real PlayStation Rainbow Six gameplay certification remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Inspect Run119 UI CI run 36151129895 once. If FAIL, fix the exact active-runtime/FFmpeg/UI readiness step on the same candidate; if PASS, promote the verified Run119 Windows launcher slice to main, record rollback/state, then open the bundled/single-file Windows packaging gate.",
-  "updated_at": "2026-09-25T17:00:00+02:00"
+  "next_action": "Inspect final Run119 CI 36151873619 once. If FAIL, fix the exact Windows readiness/runtime step on the same candidate. If PASS, promote the verified Run119 launcher+real-UI readiness slice to main, record rollback/post-promotion verification, then open the bundled/single-file Windows packaging gate.",
+  "updated_at": "2026-09-25T17:07:00+02:00"
 }
