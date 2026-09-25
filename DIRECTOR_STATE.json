@@ -1,10 +1,10 @@
 {
   "schema": 2,
-  "current_run": 120,
-  "current_candidate": "candidate/run120-windows-onefile-clean-20260925",
-  "last_good_commit": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
-  "rollback": "rollback/pre-run120-promotion-20260925-1518",
-  "current_gate": "P4_WINDOWS_ONEFILE_CLEAN_CANDIDATE_CI",
+  "current_run": 121,
+  "current_candidate": "candidate/run121-gameplay-director-20260925",
+  "last_good_commit": "3ead98de27e682f88afae16162e34a4baed55aba",
+  "rollback": "rollback/pre-run121-gameplay-director-20260925",
+  "current_gate": "P1_GAMEPLAY_DIRECTOR_REAL_PIPELINE_CANDIDATE_CI",
   "completion_score": 80,
   "verification_score": 74,
   "gate_weights": {
@@ -25,33 +25,12 @@
       "av_sync": true,
       "decode": true
     },
-    "run119_candidate_final": {
-      "run_id": 36152301262,
-      "sha": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
-      "result": "PASS",
-      "linux_regressions_through_run118": "PASS",
-      "windows_runtime_chain": "PASS",
-      "cmd_pythonw_handoff": "PASS",
-      "active_runtime_status": "PASS",
-      "real_ui_health_same_step": "PASS"
-    },
     "run119_post_promotion": {
       "run_id": 36152561984,
       "sha": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
       "result": "PASS"
     },
-    "run120_contract": {
-      "run_id": 36152446803,
-      "sha": "0b7f370d763f563adbc8775e154c531f26310ee3",
-      "result": "PASS"
-    },
-    "run120_onefile_build": {
-      "run_id": 36152761535,
-      "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
-      "result": "IN_PROGRESS",
-      "scope": "PyInstaller one-file build + --ai-status smoke + packaged UI readiness/health + artifact"
-    },
-    "run120_onefile_verified_source": {
+    "run120_verified_source": {
       "run_id": 36152761535,
       "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
       "result": "PASS",
@@ -65,32 +44,43 @@
     "run120_clean_candidate": {
       "run_id": 36154179847,
       "sha": "da273d3d88e6e0cdde701b95d82620db1e7666ab",
+      "result": "PASS"
+    },
+    "run120_post_promotion": {
+      "run_id": 36157788053,
+      "sha": "3ead98de27e682f88afae16162e34a4baed55aba",
+      "result": "PASS"
+    },
+    "run121_candidate": {
+      "run_id": 36163203960,
+      "sha": "ca19258b14e701a5f207b33b05e57d6477dbf01f",
       "result": "IN_PROGRESS",
-      "note": "same verified packaging files rebased as a single clean commit directly on current main"
+      "scope": "real encoded gameplay-like MP4 -> local structural analysis + Whisper + RapidOCR -> conservative R6 evidence -> Director preview/apply/cancel -> changed timeline -> FFmpeg export -> ffprobe/A-V/decode QC; Windows active runtime + one-file packaging"
     }
   },
   "benchmark_baseline": {
-    "windows_real": "RUN119_NATIVE_UI_PASS_AND_PROMOTED",
-    "windows_onefile": "EXE_REAL_BUILD_UI_PASS_CLEAN_REBASE_CI_IN_PROGRESS",
+    "windows_real": "RUN120_ONEFILE_PROMOTED_POST_PROMOTION_PASS",
+    "gameplay_director": "RUN121_CANDIDATE_CI_IN_PROGRESS",
     "real_ps_r6_gameplay": "NOT_EXECUTED"
   },
   "implemented": [
     "Run118 verified transcript preview/apply -> changed timeline -> real export/QC",
-    "Run119 deterministic one-click launcher uses explicit runtime manifest and protected dependency chain",
-    "Run119 prefers bundled Python, gates Python>=3.11, integrates FFmpeg/ffprobe and fails closed on invalid runtime dependencies",
-    "Run119 same-step Windows readiness verifier certifies atomic ready-file -> /api/health -> real UI before launcher success",
-    "Run119 native Windows candidate CI PASS and post-promotion main CI PASS",
-    "Run120 PyInstaller one-file entrypoint packages the verified Run119->118->117->113->112 runtime chain",
-    "Run120 build script creates ZeroCut.exe, checks size, --ai-status and SHA256",
-    "Run120 CI builds the real one-file executable, smokes packaged UI readiness and publishes the EXE artifact",
-    "Run120 one-file spec explicitly includes dynamically loaded runtime imports and disables UPX"
+    "Run119 native Windows one-click launcher and real UI readiness promoted",
+    "Run120 ZeroCut.exe one-file packaging promoted and post-promotion CI PASS",
+    "Run121 candidate adds one gameplay Director transaction from local video analysis through preview/apply/cancel",
+    "Run121 candidate uses certified R6 replay/timeline events only for semantic clips; OCR/audio/motion cannot fabricate kills",
+    "Run121 candidate falls back to generic multi-signal highlights when semantic R6 evidence is absent",
+    "Run121 candidate integrates local Whisper and bounded RapidOCR evidence into the gameplay plan",
+    "Run121 candidate activates the new Director in Windows launcher and PyInstaller one-file chain",
+    "Run121 candidate E2E test requires real encoded MP4, timeline delta, real FFmpeg export and duration/A-V/decode QC",
+    "Run121 CI restores the real RapidOCR certification gate before the gameplay E2E"
   ],
   "blockers": [
-    "Run120 clean candidate CI 36154179847 must complete green before promotion",
-    "Real PlayStation Rainbow Six gameplay certification remains pending",
-    "Browser-driven transcript/export E2E remains pending",
-    "Creator engine local remains incomplete"
+    "Run121 candidate CI 36163203960 is still in progress; completion/verification scores are frozen until it passes",
+    "Real PlayStation Rainbow Six gameplay fixture/certification remains pending and is not substituted by the synthetic encoded fixture",
+    "Browser-driven click-level E2E remains pending",
+    "Creator-from-zero local engine remains incomplete"
   ],
-  "next_action": "Inspect clean Run120 CI 36154179847 once. If FAIL, fix the exact build/runtime/UI step on candidate/run120-windows-onefile-clean-20260925. If PASS, fast-forward main to da273d3, verify post-promotion main CI, record the promoted ZeroCut.exe artifact evidence, then move priority to real PlayStation/Rainbow Six end-to-end certification.",
-  "updated_at": "2026-09-25T17:27:00+02:00"
+  "next_action": "On the next execution inspect Run121 CI 36163203960 once. If FAIL, fix the exact failing Run121 gameplay/Windows/packaging step on the same candidate. If PASS, record real E2E metrics and EXE artifact/hash, promote candidate/run121-gameplay-director-20260925 to main with rollback preserved, verify main once, then acquire/certify a real PlayStation Rainbow Six gameplay fixture.",
+  "updated_at": "2026-09-25T18:55:00+02:00"
 }
