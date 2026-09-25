@@ -1,38 +1,72 @@
 {
   "schema": 2,
-  "current_run": 116,
-  "current_candidate": "candidate/run116-transcript-regression",
-  "last_good_commit": "1a1fbb2e2c9a3d214340d4b2b38f5804d278effa",
-  "rollback": "rollback/pre-run116-transcript-regression-20260925",
-  "current_gate": "P1_TRANSCRIPT_EDIT_HTTP_UI_VERIFICATION",
+  "current_run": 117,
+  "current_candidate": "candidate/run117-transcript-ui",
+  "last_good_commit": "a8f03d089f59e4914167d4c2027ef78ea5d13369",
+  "rollback": "rollback/pre-run117-transcript-ui-20260925",
+  "current_gate": "P1_TRANSCRIPT_EDIT_HTTP_UI_VERIFIED_CANDIDATE",
   "completion_score": 75,
   "verification_score": 66,
-  "gate_weights": {"P0_windows_runtime":25,"P1_core_editing":25,"P2_ai_analysis":20,"P3_creator_engine":15,"P4_packaging_ux":15},
-  "last_tests": {
-    "run112_regression": "PASS: 44/44 from last verified run",
-    "run116_initial_ci": "FAIL: regression targeted the inherited Run112 autoedit/cancel route instead of the active Run113 handler",
-    "run116_active_handler_review": "PASS: Run113 intercepts /api/autoedit/cancel and reads payload=self._body_json() before project_revision; transcript apply has project revision guard and preview has TIMELINE_UNCHANGED guard",
-    "run116_regression_fix": "c458b204fe9dc714a302f6d4e6ef69e25947d0c1 tests the actual Run113 candidate and verifies a synthetic 10s timeline becomes shorter after explicit transcript removal",
-    "run116_ci_fix": "d1078a9369ce35f4b50d0b81e1a7330194278bbd runs the standalone Run116 regression in CI; workflow 36132400292 is IN_PROGRESS"
+  "gate_weights": {
+    "P0_windows_runtime": 25,
+    "P1_core_editing": 25,
+    "P2_ai_analysis": 20,
+    "P3_creator_engine": 15,
+    "P4_packaging_ux": 15
   },
-  "benchmark_baseline": {"windows_real": "NOT_EXECUTED", "real_ps_r6_gameplay": "NOT_EXECUTED"},
+  "last_tests": {
+    "run116_ci": {
+      "run_id": 36132635368,
+      "sha": "6b25f0ee163a7574997ce50e3ea4352698017ec5",
+      "result": "PASS",
+      "timeline_before": 10,
+      "timeline_after": 8,
+      "removed": 2
+    },
+    "run117_ci": {
+      "run_id": 36132883817,
+      "sha": "a8f03d089f59e4914167d4c2027ef78ea5d13369",
+      "result": "PASS",
+      "timeline_before": 12,
+      "timeline_after": 9.5,
+      "removed": 2.5
+    },
+    "regression_scope": [
+      "source truth",
+      "Run101",
+      "Run102",
+      "Run103",
+      "Run106",
+      "Run107",
+      "Run108",
+      "Run109",
+      "Run111 Whisper",
+      "Run112 Whisper UX",
+      "Run116 transcript regression",
+      "Run117 transcript UI"
+    ]
+  },
+  "benchmark_baseline": {
+    "windows_real": "NOT_EXECUTED",
+    "real_ps_r6_gameplay": "NOT_EXECUTED"
+  },
   "implemented": [
     "Run113 persists full local transcript segments for deterministic text-based editing",
-    "Run113 adds transcript selection preview/apply/cancel HTTP path",
-    "Run114 rejects empty transcript selections",
-    "Run114 computes before/after timeline duration and segment-count metrics",
-    "Run114 refuses preview when proposed timeline is unchanged",
-    "Run114 adds project revision conflict protection to transcript apply",
-    "Run115 makes the active Run113 transcript/auto-edit cancel handler revision-safe",
-    "Run116 adds executable regression for the active transcript handler",
-    "Run116 regression verifies explicit transcript removal produces a non-identical shorter timeline",
-    "Run116 CI executes the transcript regression without an undeclared pytest dependency"
+    "Run113 provides transcript selection preview/apply/cancel HTTP path",
+    "Run116 fixes .pyw candidate loading with SourceFileLoader and corrects timeline metrics to receipt.after",
+    "Run116 verifies requested transcript removal changes timeline: 10.0s -> 8.0s",
+    "Run117 adds selectable transcript blocks with Preview/Apply/Cancel UI",
+    "Run117 adds GET /api/transcript/segments without rerunning Whisper",
+    "Run117 displays explicit before/after/removed duration before apply",
+    "Run117 verifies transcript UI path preserves real timeline delta: 12.0s -> 9.5s"
   ],
   "blockers": [
-    "Run116 corrected CI is still in progress; do not promote or increase scores until it completes green",
-    "Transcript segment selection controls are not yet rendered in browser UI",
-    "Real Windows/PS5 R6 gameplay certification remains pending"
+    "Run117 candidate still needs promotion and post-promotion CI on main",
+    "Browser-driven E2E of transcript selection controls has not been executed",
+    "Edited timeline -> export/QC shortened playable MP4 is not yet certified end-to-end",
+    "Real Windows/PlayStation Rainbow Six gameplay certification remains pending",
+    "Creator engine local remains incomplete"
   ],
-  "next_action": "Read workflow 36132400292 result. If green, close the Run116 regression gate and implement browser transcript segment selection with preview/apply/cancel plus before/after duration feedback; if red, fix that exact failing Run116 step before any UI work.",
-  "updated_at": "2026-09-25T14:00:30+02:00"
+  "next_action": "Run118: after Run117 promotion, execute transcript edit on a synthetic spoken video, apply the shorter timeline, export a real MP4, run QC/ffprobe, and prove exported duration/content is consistent with the edited timeline and shorter than the input.",
+  "updated_at": "2026-09-25T14:08:00+02:00"
 }
