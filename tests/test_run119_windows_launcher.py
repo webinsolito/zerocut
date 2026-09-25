@@ -27,6 +27,7 @@ assert "os.environ['ZEROCUT_APP_ABS']" in text
 assert "Path(r'%~dp0')" not in text
 assert "p.is_relative_to(root)" in text
 assert 'start "ZeroCut"' in text
+assert '"%ZC_APP_ABS%" %*' in text
 for code in (0, 2, 3, 4, 5, 6, 7):
     assert f"exit /b {code}" in text
 
