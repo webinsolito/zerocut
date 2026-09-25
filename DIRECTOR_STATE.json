@@ -1,19 +1,18 @@
 {
   "schema": 2,
-  "current_run": 115,
-  "current_candidate": "candidate/run114-transcript-ui",
+  "current_run": 116,
+  "current_candidate": "candidate/run116-transcript-regression",
   "last_good_commit": "1a1fbb2e2c9a3d214340d4b2b38f5804d278effa",
-  "rollback": "rollback/pre-run114-transcript-ui-20260925",
+  "rollback": "rollback/pre-run116-transcript-regression-20260925",
   "current_gate": "P1_TRANSCRIPT_EDIT_HTTP_UI_VERIFICATION",
   "completion_score": 75,
-  "verification_score": 68,
+  "verification_score": 66,
   "gate_weights": {"P0_windows_runtime":25,"P1_core_editing":25,"P2_ai_analysis":20,"P3_creator_engine":15,"P4_packaging_ux":15},
   "last_tests": {
     "run112_regression": "PASS: 44/44 from last verified run",
-    "run113_runtime": "NOT_EXECUTED",
-    "run114_static_review": "PASS: empty-selection rejection, TIMELINE_UNCHANGED guard, before/after metrics, apply revision check",
-    "run115_static_review": "PASS: preview/apply/cancel now use optimistic project revision checks; proposal persists source revision",
-    "run115_runtime": "NOT_EXECUTED: attempted repository checkout but execution environment DNS could not resolve github.com; no GitHub Actions run exists for the candidate commit"
+    "run116_regression_added": "tests/test_run116_transcript_regression.py committed and CI wired",
+    "run116_source_review": "FAIL: /api/autoedit/cancel reads payload.get(project_revision) without first assigning payload = self._body_json()",
+    "run116_ci": "IN_PROGRESS after regression test commit; workflow update committed immediately after"
   },
   "benchmark_baseline": {"windows_real": "NOT_EXECUTED", "real_ps_r6_gameplay": "NOT_EXECUTED"},
   "implemented": [
@@ -23,15 +22,16 @@
     "Run114 computes before/after timeline duration and segment-count metrics",
     "Run114 refuses preview when proposed timeline is unchanged",
     "Run114 adds project revision conflict protection to transcript apply",
-    "Run115 makes transcript preview fail closed on concurrent project mutation",
-    "Run115 persists proposal source revision and validates it on apply",
-    "Run115 makes transcript/auto-edit cancel revision-safe"
+    "Run115 intended revision-safe transcript/auto-edit cancel behavior",
+    "Run116 adds an executable regression gate for transcript analysis, apply revision safety and cancel payload handling",
+    "Run116 wires the new regression into GitHub Actions"
   ],
   "blockers": [
+    "RED: current candidate source has /api/autoedit/cancel payload reference before request JSON is read; Run116 regression is designed to fail until fixed",
     "Run113-115 candidate still needs executable regression before replacing Run112 as last-good",
     "Transcript segment selection controls are not yet rendered in browser UI",
     "Real Windows/PS5 R6 gameplay certification remains pending"
   ],
-  "next_action": "Obtain executable regression evidence for Run115 preview/apply/cancel concurrency and TIMELINE_UNCHANGED cases; if green, wire transcript segment selection controls into browser UI and verify a selected removal changes timeline duration/segments before apply.",
-  "updated_at": "2026-09-25T10:55:45+02:00"
+  "next_action": "Fix /api/autoedit/cancel so it reads payload = self._body_json() before project_revision access, rerun Run116 CI to green, then continue transcript segment UI only if the gate passes.",
+  "updated_at": "2026-09-25T12:59:00+02:00"
 }
