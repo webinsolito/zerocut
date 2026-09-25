@@ -20,6 +20,11 @@ assert "runtime\\ffmpeg\\bin" in text
 assert "ZEROCUT_FFMPEG" in text and "ZEROCUT_FFPROBE" in text
 assert "set \"PATH=%~dp0runtime\\ffmpeg\\bin;%PATH%\"" in text
 assert "zerocut-launcher.log" in text
+assert "ZEROCUT_ROOT=%~dp0" in text
+assert "ZEROCUT_APP_ABS" in text
+assert "os.environ['ZEROCUT_ROOT']" in text
+assert "os.environ['ZEROCUT_APP_ABS']" in text
+assert "Path(r'%~dp0')" not in text
 assert "p.is_relative_to(root)" in text
 assert 'start "ZeroCut"' in text
 for code in (0, 2, 3, 4, 5, 6, 7):
