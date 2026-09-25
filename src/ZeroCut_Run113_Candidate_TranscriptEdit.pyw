@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import importlib.util,json,sys
+import importlib.machinery,importlib.util,json,sys
 from pathlib import Path
 from urllib.parse import urlparse
 BASE_PATH=Path(__file__).with_name("ZeroCut_Run112_Candidate_WhisperUX.pyw")
-spec=importlib.util.spec_from_file_location("zerocut_run112",BASE_PATH)
-if spec is None or spec.loader is None: raise RuntimeError("RUN112_BASE_NOT_LOADABLE")
-base=importlib.util.module_from_spec(spec);sys.modules[spec.name]=base;spec.loader.exec_module(base)
+loader=importlib.machinery.SourceFileLoader("zerocut_run112",str(BASE_PATH))
+spec=importlib.util.spec_from_loader("zerocut_run112",loader)
+if spec is None: raise RuntimeError("RUN112_BASE_NOT_LOADABLE")
+base=importlib.util.module_from_spec(spec);sys.modules[spec.name]=base;loader.exec_module(base)
 
 def prepare_transcript_edit(state,selected_ids,padding=0.04):
  media=state.get("media") or {};duration=float((media.get("metadata") or {}).get("duration") or 0.0)
