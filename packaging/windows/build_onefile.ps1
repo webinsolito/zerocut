@@ -14,18 +14,23 @@ $Spec = Join-Path $Root "packaging\windows\ZeroCut.spec"
 New-Item -ItemType Directory -Force -Path $BuildRoot, $Dist, $Work | Out-Null
 
 if (!(Test-Path $Python)) {
-    $Launcher = Get-Command py.exe -ErrorAction SilentlyContinue
-    if ($Launcher) {
-        & $Launcher.Source -3.13 -m venv $Venv
-    } else {
-        $SystemPython = (Get-Command python.exe -ErrorAction Stop).Source
+    $SystemPython = (Get-Command python.exe -ErrorAction SilentlyContinue).Source
+    if ($SystemPython) {
+        $VersionOk = & $SystemPython -c "import sys; print(int(sys.version_info >= (3, 11)))"
+        if ($VersionOk -ne "1") { throw "Python 3.11+ required to build ZeroCut.exe" }
         & $SystemPython -m venv $Venv
+    } else {
+        $Launcher = Get-Command py.exe -ErrorAction Stop
+        & $Launcher.Source -3.13 -m venv $Venv
     }
 }
+if (!(Test-Path $Python)) { throw "Build virtualenv was not created" }
 
 if (!$SkipInstall) {
     & $Python -m pip install --disable-pip-version-check --upgrade pip
+    if ($LASTEXITCODE -ne 0) { throw "pip upgrade failed" }
     & $Python -m pip install --disable-pip-version-check "pyinstaller==6.16.0"
+    if ($LASTEXITCODE -ne 0) { throw "PyInstaller install failed" }
 }
 
 Remove-Item -Recurse -Force $Dist -ErrorAction SilentlyContinue
