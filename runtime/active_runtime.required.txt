@@ -3,3 +3,4 @@ src\ZeroCut_Run118_Candidate_ExportQC.pyw
 src\ZeroCut_Run117_Candidate_TranscriptUI.pyw
 src\ZeroCut_Run113_Candidate_TranscriptEdit.pyw
 src\ZeroCut_Run112_Candidate_WhisperUX.pyw
+runtime\verify_ready.py
