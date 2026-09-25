@@ -7,6 +7,7 @@ on:
     paths:
       - "src/**"
       - "runtime/**"
+      - "packaging/**"
       - "rollback/**"
       - "reports/**"
       - "tests/**"
@@ -67,6 +68,8 @@ jobs:
         run: python tests/test_run118_export_qc.py
       - name: Run119 Windows launcher contract
         run: python tests/test_run119_windows_launcher.py
+      - name: Run120 one-file packaging contract
+        run: python tests/test_run120_onefile_contract.py
 
   windows-launcher-smoke:
     runs-on: windows-latest
@@ -157,3 +160,25 @@ jobs:
               Stop-Process -Id ([int]$ready.pid) -Force -ErrorAction SilentlyContinue
             } catch {}
           }
+
+  windows-onefile-build:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify one-file packaging contract
+        shell: pwsh
+        run: python tests/test_run120_onefile_contract.py
+      - name: Build and smoke ZeroCut.exe
+        shell: pwsh
+        run: .\packaging\windows\build_onefile.ps1
+      - name: Publish ZeroCut one-file artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZeroCut-Windows-OneFile-${{ github.sha }}
+          path: dist/windows/ZeroCut.exe
+          if-no-files-found: error
+          retention-days: 7
