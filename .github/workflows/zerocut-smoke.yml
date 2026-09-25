@@ -79,14 +79,21 @@ jobs:
       - name: Validate launcher contract on Windows
         shell: pwsh
         run: python tests/test_run119_windows_launcher.py
-      - name: Verify configured full runtime on Windows
+      - name: Verify configured runtime chain on Windows
         shell: pwsh
         run: |
           $rel = (Get-Content runtime\active_runtime.txt -Raw).Trim()
           $target = Join-Path $PWD $rel
           if (!(Test-Path $target)) { throw "Configured runtime missing: $target" }
-          if ((Get-Item $target).Length -le 100000) { throw "Configured runtime is not full-size" }
+          $required = Get-Content runtime\active_runtime.required.txt | Where-Object { $_.Trim() }
+          if ($required.Count -lt 5) { throw "Runtime dependency manifest incomplete" }
+          foreach ($item in $required) {
+            $path = Join-Path $PWD $item.Trim()
+            if (!(Test-Path $path)) { throw "Runtime dependency missing: $item" }
+            if ((Get-Item $path).Length -le 500) { throw "Runtime dependency unexpectedly small: $item" }
+          }
           Write-Host "ACTIVE_RUNTIME=$rel"
+          Write-Host "ACTIVE_RUNTIME_CHAIN=$($required.Count)"
       - name: Execute real cmd to pythonw process handoff
         shell: cmd
         env:
