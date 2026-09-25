@@ -4,29 +4,32 @@
   "current_candidate": "candidate/run119-windows-launcher-20260925",
   "last_good_commit": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
   "rollback": "rollback/pre-run119-windows-launcher-20260925",
-  "current_gate": "P0_WINDOWS_ONE_CLICK_LAUNCHER_CANDIDATE",
+  "current_gate": "P0_WINDOWS_ONE_CLICK_LAUNCHER_FIX_IN_CI",
   "completion_score": 75,
   "verification_score": 66,
   "gate_weights": {"P0_windows_runtime":25,"P1_core_editing":25,"P2_ai_analysis":20,"P3_creator_engine":15,"P4_packaging_ux":15},
   "last_tests": {
     "run118_candidate": {"run_id":36138253394,"sha":"1e6c838ad9d7a3aaaec4b699ff280c44c76ab476","result":"PASS","input_duration":12,"edited_timeline_duration":9.5,"exported_duration":9.5,"av_sync":true,"decode":true},
     "run118_post_promotion": {"run_id":36138517351,"sha":"5a4f3308148c2e530f2c450f0cad7d3aa2be340e","result":"PASS"},
-    "run119_candidate": {"latest_commit":"baf593941769edc196b97491586d921d038ee942","ci":"PENDING","note":"Windows-native job added; no PASS claimed until completed green"}
+    "run119_failed": {"run_id":36144510616,"sha":"baf593941769edc196b97491586d921d038ee942","result":"FAIL","windows_step":"Validate launcher contract on Windows","linux_regressions_through_run118":"PASS","linux_run119_contract":"FAIL"},
+    "run119_fix": {"sha":"5216a719d3704c070d74a576213a5730cef20362","result":"PENDING_CI","changes":"bundled Python preference + runtime preflight + visible error codes/log + corrected cross-platform path assertions"}
   },
-  "benchmark_baseline": {"windows_real":"NOT_EXECUTED","real_ps_r6_gameplay":"NOT_EXECUTED"},
+  "benchmark_baseline": {"windows_real":"CI_NATIVE_PENDING_AFTER_FIX","real_ps_r6_gameplay":"NOT_EXECUTED"},
   "implemented": [
     "Run118 verified transcript preview/apply -> changed timeline -> real export/QC",
-    "Run119 adds ZeroCut.cmd one-click launcher with pythonw handoff and no persistent terminal",
-    "Run119 resolves bundled/private FFmpeg, ffprobe and Whisper runtime paths when present",
-    "Run119 adds Windows-native CI launcher contract/runtime discovery smoke while retaining Linux regression suite"
+    "Run119 ZeroCut.cmd one-click launcher with pythonw handoff and no persistent terminal",
+    "Run119 resolves bundled/private Python, FFmpeg, ffprobe and Whisper runtime paths when present",
+    "Run119 performs runtime-file preflight before UI handoff and records launcher failures in zerocut-launcher.log",
+    "Run119 exposes distinct exit codes for missing Python, missing app, failed preflight and failed launch",
+    "Run119 keeps Windows-native CI launcher smoke plus full Linux regression suite"
   ],
   "blockers": [
-    "Run119 candidate CI has not completed yet",
-    "Clean Windows host launch/UI-open certification remains pending",
+    "Run119 fix CI must complete green before promotion",
+    "Clean Windows host UI-open certification remains pending",
     "Browser-driven transcript/export E2E remains pending",
     "Real PlayStation Rainbow Six gameplay certification remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Run119 continuation: inspect the candidate CI once. If green, strengthen the Windows job from launcher contract to actual process/UI readiness smoke and promote only after PASS; if red, fix the exact failing Windows/Linux step on the same candidate before any other work.",
-  "updated_at": "2026-09-25T16:02:00+02:00"
+  "next_action": "Run119 continuation: inspect CI for fix SHA 5216a719d3704c070d74a576213a5730cef20362 once; if FAIL fix the exact launcher/runtime step on this candidate, if PASS add actual Windows process/UI-open smoke and only then promote after green.",
+  "updated_at": "2026-09-25T16:41:00+02:00"
 }
