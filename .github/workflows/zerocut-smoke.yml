@@ -59,3 +59,5 @@ jobs:
         run: python tests/test_run112_whisper_ux.py
       - name: Run116 transcript and auto-edit regression
         run: python tests/test_run116_transcript_regression.py
+      - name: Run117 transcript edit UI
+        run: python tests/test_run117_transcript_ui.py
