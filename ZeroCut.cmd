@@ -41,7 +41,7 @@ if exist "%~dp0runtime\ffmpeg\bin\ffmpeg.exe" if exist "%~dp0runtime\ffmpeg\bin\
 )
 
 rem Preflight: entrypoint and every declared runtime dependency must exist inside the package.
-"%ZC_PYTHON%" -c "import os; from pathlib import Path; root=Path(os.environ['ZEROCUT_ROOT']).resolve(); p=Path(os.environ['ZEROCUT_APP_ABS']).resolve(); assert p.is_relative_to(root) and p.is_file(); req=root/'runtime'/'active_runtime.required.txt'; rows=[x.strip() for x in req.read_text(encoding='utf-8').splitlines() if x.strip()] if req.is_file() and not os.environ.get('ZEROCUT_APP_OVERRIDE') else []; deps=[(root/Path(x.replace('\\','/'))).resolve() for x in rows]; assert all(x.is_relative_to(root) and x.is_file() and x.stat().st_size>500 for x in deps)" >nul 2>>"%ZC_LOG%"
+"%ZC_PYTHON%" -c "import os; from pathlib import Path; root=Path(os.environ['ZEROCUT_ROOT']).resolve(); p=Path(os.environ['ZEROCUT_APP_ABS']).resolve(); override=bool(os.environ.get('ZEROCUT_APP_OVERRIDE')); assert p.is_relative_to(root) and p.is_file(), 'entrypoint_missing'; req=root/'runtime'/'active_runtime.required.txt'; assert override or req.is_file(), 'dependency_manifest_missing'; rows=[] if override else [x.strip() for x in req.read_text(encoding='utf-8').splitlines() if x.strip()]; assert override or rows, 'dependency_manifest_empty'; deps=[(root/Path(x.replace('\\','/'))).resolve() for x in rows]; bad=[x for x in deps if not (x.is_relative_to(root) and x.is_file() and x.stat().st_size>500)]; assert not bad, 'runtime_dependency_invalid:'+str(bad[0])" >nul 2>>"%ZC_LOG%"
 if errorlevel 1 goto :runtime_error
 
 rem CI can wait for a short probe; normal user launch returns immediately with no terminal left open.
