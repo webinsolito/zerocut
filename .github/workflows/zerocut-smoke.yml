@@ -25,7 +25,7 @@ jobs:
       - name: Install FFmpeg test runtime
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg
+          sudo apt-get install -y ffmpeg espeak-ng
           ffmpeg -version
           ffprobe -version
       - name: Verify recovered baseline
@@ -51,8 +51,9 @@ jobs:
       - name: Run109 R6 evidence gate
         if: hashFiles('src/ZeroCut_Run109_Candidate_R6EvidenceGate.pyw') != ''
         run: python tests/test_run109_r6_evidence_gate.py
-      - name: Run110 real RapidOCR certification
-        if: hashFiles('src/ZeroCut_Run110_Candidate_OCRCertification.pyw') != ''
-        run: python tests/test_run110_ocr_certification.py
-
-
+      - name: Run111 real Whisper certification
+        if: hashFiles('src/ZeroCut_Run111_Candidate_WhisperCertification.pyw') != ''
+        run: python tests/test_run111_whisper_certification.py
+      - name: Run112 Whisper product UX
+        if: hashFiles('src/ZeroCut_Run112_Candidate_WhisperUX.pyw') != ''
+        run: python tests/test_run112_whisper_ux.py

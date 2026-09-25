@@ -1,0 +1,36 @@
+{
+  "project": "ZeroCut / ZeroCut Gaming AI",
+  "current_run": 112,
+  "current_candidate": "candidate/run112-whisper-ux",
+  "last_good_commit": "45a64d03f576ad769b4d06a86a5f8c583c9659b7",
+  "rollback": "rollback/pre-run112-whisper-ux-20260925",
+  "current_gate": "Whisper certified on candidate; harden transcript semantics/UX, then validate and promote",
+  "completion_score": 51,
+  "verification_score": 51,
+  "score_basis": "Bootstrap baseline from last independent-controller state (>=51% verified). Do not recompute historical completion. Scores may increase only when a fixed gate below is implemented and verified.",
+  "gate_weights": {
+    "media_timeline_core": 20,
+    "ai_analysis_whisper_ocr": 20,
+    "director_executor_autoedit": 20,
+    "export_qc": 15,
+    "windows_readiness": 10,
+    "creator_engine_local": 10,
+    "ux_productization": 5
+  },
+  "last_tests": {
+    "run111_actions_run": 35925126519,
+    "branch": "candidate/run111-whisper-certification",
+    "sha": "45a64d03f576ad769b4d06a86a5f8c583c9659b7",
+    "result": "PASS"
+  },
+  "benchmark_baseline": {
+    "whisper_gate": "candidate PASS",
+    "timeline_change_requirement": "must differ coherently from input when auto-edit is requested"
+  },
+  "blockers": [
+    "Run111 Whisper not promoted to main",
+    "Whisper success semantics/UI do not yet explicitly prove non-empty usable transcript",
+    "Clean Windows V1 E2E not yet certified"
+  ],
+  "next_action": "Harden Whisper transcript result semantics and user-visible status on candidate/run112-whisper-ux; add focused regression test; validate Actions; promote only after PASS."
+}
