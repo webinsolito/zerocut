@@ -1,0 +1,30 @@
+{
+  "schema": 2,
+  "current_run": 113,
+  "current_candidate": "candidate/run113-transcript-edit",
+  "last_good_commit": "1a1fbb2e2c9a3d214340d4b2b38f5804d278effa",
+  "rollback": "rollback/pre-run113-transcript-edit-20260925",
+  "current_gate": "P1_TRANSCRIPT_EDIT_HTTP_UI_VERIFICATION",
+  "completion_score": 75,
+  "verification_score": 68,
+  "gate_weights": {"P0_windows_runtime":25,"P1_core_editing":25,"P2_ai_analysis":20,"P3_creator_engine":15,"P4_packaging_ux":15},
+  "last_tests": {
+    "run112_regression": "PASS: 44/44 from last verified run",
+    "run113_static": "candidate file committed; runtime execution not performed in this automation environment because direct GitHub checkout/network was unavailable",
+    "run113_required": "execute py_compile + transcript selection preview/apply/cancel HTTP regression before promotion"
+  },
+  "benchmark_baseline": {"windows_real": "NOT_EXECUTED", "real_ps_r6_gameplay": "NOT_EXECUTED"},
+  "implemented": [
+    "Run113 persists full local transcript segments for deterministic text-based editing",
+    "Run113 adds explicit transcript selection -> reviewable timeline transaction",
+    "Run113 adds transcript preview/apply/cancel HTTP path with revision-safe commit",
+    "Run113 active handler fixes Run112 /api/autoedit/cancel undefined-payload regression"
+  ],
+  "blockers": [
+    "Run113 candidate needs executable regression before it can replace Run112 as last-good",
+    "Transcript edit controls are not yet rendered in the browser UI",
+    "Real Windows/PS5 R6 gameplay certification remains pending"
+  ],
+  "next_action": "Execute Run113 regression; if green, add browser transcript segment selection UI wired to /api/transcript/edit/preview|apply|cancel and verify timeline duration/content changes before/after.",
+  "updated_at": "2026-09-25T08:55:35+02:00"
+}
