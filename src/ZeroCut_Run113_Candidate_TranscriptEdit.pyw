@@ -20,6 +20,13 @@ def prepare_transcript_edit(state,selected_ids,padding=0.04):
   receipt.update({"director_intent":"remove_selected_transcript","detector":"explicit_transcript_selection","selected_ids":raw.get("selected_ids") or [],"matched_ids":raw.get("matched_ids") or [],"transcript_ranges":raw.get("transcript_ranges") or [],"requires_preview":True})
  return receipt
 
+def transcript_edit_metrics(state,receipt):
+ before=state.get("segments") or []
+ after=receipt.get("proposed_segments") or receipt.get("segments") or []
+ def total(rows): return round(sum(max(0.0,float(x.get("end",0))-float(x.get("start",0))) for x in rows if isinstance(x,dict)),3)
+ b=total(before);a=total(after)
+ return {"before_duration":b,"after_duration":a,"removed_duration":round(max(0.0,b-a),3),"before_segments":len(before),"after_segments":len(after),"timeline_changed":bool(after and (a!=b or after!=before))}
+
 class Handler(base.Handler):
  def do_POST(self):
   path=urlparse(self.path).path
@@ -32,15 +39,19 @@ class Handler(base.Handler):
     base.json_response(self,body,200 if body["ok"] else 422);return
    if path=="/api/transcript/edit/preview":
     payload=self._body_json();state=base.load_state();selected=payload.get("selected_ids") or []
-    if not isinstance(selected,list): raise ValueError("selected_ids deve essere una lista")
+    if not isinstance(selected,list) or not selected: raise ValueError("Seleziona almeno un blocco della trascrizione")
     receipt=prepare_transcript_edit(state,selected,float(payload.get("padding",0.04)))
     if not receipt.get("ok"): base.json_response(self,{"ok":False,"error":receipt.get("error"),"transaction":receipt},422);return
-    state["transcript_edit_proposal"]={"transaction":receipt};base.save_state(state);base.json_response(self,{"ok":True,"transaction":receipt});return
+    metrics=transcript_edit_metrics(state,receipt)
+    if not metrics["timeline_changed"]: base.json_response(self,{"ok":False,"error":"TIMELINE_UNCHANGED","transaction":receipt,"metrics":metrics},422);return
+    state["transcript_edit_proposal"]={"transaction":receipt,"metrics":metrics};base.save_state(state);base.json_response(self,{"ok":True,"transaction":receipt,"metrics":metrics});return
    if path=="/api/transcript/edit/apply":
-    self._body_json();state=base.load_state();receipt=((state.get("transcript_edit_proposal") or {}).get("transaction") or {});current=state.get("segments") or []
+    payload=self._body_json();state=base.load_state();proposal=state.get("transcript_edit_proposal") or {};receipt=proposal.get("transaction") or {};current=state.get("segments") or []
+    expected=payload.get("project_revision");
+    if expected and str(expected)!=base.project_state_revision(state): base.json_response(self,{"ok":False,"error":"PROJECT_REVISION_CONFLICT"},409);return
     commit=base.commit_director_segment_transaction(current,receipt,expected_revision=str(receipt.get("expected_revision") or ""))
     if not commit.get("ok"): base.json_response(self,{"ok":False,"error":commit.get("error")},409);return
-    state["segments"]=commit.get("segments") or [];state["selected_segment"]=state["segments"][0]["id"] if state["segments"] else None;state["transcript_edit_proposal"]=None;base.save_state(state);base.json_response(self,{"ok":True,"project":state,"commit":commit});return
+    state["segments"]=commit.get("segments") or [];state["selected_segment"]=state["segments"][0]["id"] if state["segments"] else None;state["transcript_edit_proposal"]=None;base.save_state(state);base.json_response(self,{"ok":True,"project":state,"commit":commit,"metrics":proposal.get("metrics") or {}});return
    if path in {"/api/transcript/edit/cancel","/api/autoedit/cancel"}:
     payload=self._body_json();state=base.load_state();state["transcript_edit_proposal" if path.startswith("/api/transcript") else "auto_edit_proposal"]=None;expected=payload.get("project_revision");base.save_state(state,expected_revision=str(expected) if expected else None);base.json_response(self,{"ok":True,"project":state});return
   except base.ProjectRevisionConflict as exc: base.json_response(self,{"error":str(exc),"code":"PROJECT_REVISION_CONFLICT"},409);return
