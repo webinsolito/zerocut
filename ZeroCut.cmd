@@ -46,9 +46,9 @@ if errorlevel 1 goto :runtime_error
 
 rem CI can wait for a short probe; normal user launch returns immediately with no terminal left open.
 if defined ZEROCUT_LAUNCHER_WAIT (
-  start "ZeroCut" /wait /d "%~dp0" "%ZC_PYTHONW%" "%ZC_APP_ABS%"
+  start "ZeroCut" /wait /d "%~dp0" "%ZC_PYTHONW%" "%ZC_APP_ABS%" %*
 ) else (
-  start "ZeroCut" /d "%~dp0" "%ZC_PYTHONW%" "%ZC_APP_ABS%"
+  start "ZeroCut" /d "%~dp0" "%ZC_PYTHONW%" "%ZC_APP_ABS%" %*
 )
 if errorlevel 1 goto :launch_error
 exit /b 0
