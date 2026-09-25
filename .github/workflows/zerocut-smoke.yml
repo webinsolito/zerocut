@@ -58,4 +58,4 @@ jobs:
         if: hashFiles('src/ZeroCut_Run112_Candidate_WhisperUX.pyw') != ''
         run: python tests/test_run112_whisper_ux.py
       - name: Run116 transcript and auto-edit regression
-        run: python -m pytest -q tests/test_run116_transcript_regression.py
+        run: python tests/test_run116_transcript_regression.py
