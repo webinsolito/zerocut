@@ -1,12 +1,12 @@
 {
   "schema": 2,
-  "current_run": 119,
-  "current_candidate": "candidate/run119-windows-launcher-20260925",
-  "last_good_commit": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
-  "rollback": "rollback/pre-run119-windows-launcher-20260925",
-  "current_gate": "P0_WINDOWS_REAL_UI_READINESS_FINAL_CI",
-  "completion_score": 75,
-  "verification_score": 66,
+  "current_run": 120,
+  "current_candidate": "candidate/run120-windows-onefile-20260925",
+  "last_good_commit": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
+  "rollback": "rollback/pre-run120-windows-onefile-20260925",
+  "current_gate": "P4_WINDOWS_ONEFILE_BUILD_AND_UI_CI",
+  "completion_score": 80,
+  "verification_score": 74,
   "gate_weights": {
     "P0_windows_runtime": 25,
     "P1_core_editing": 25,
@@ -15,8 +15,9 @@
     "P4_packaging_ux": 15
   },
   "last_tests": {
-    "run118_candidate": {
-      "run_id": 36138253394,
+    "run118_post_promotion": {
+      "run_id": 36138517351,
+      "sha": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
       "result": "PASS",
       "input_duration": 12,
       "edited_timeline_duration": 9.5,
@@ -24,76 +25,55 @@
       "av_sync": true,
       "decode": true
     },
-    "run118_post_promotion": {
-      "run_id": 36138517351,
-      "sha": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
-      "result": "PASS"
-    },
-    "run119_native_fail": {
-      "run_id": 36150836818,
-      "sha": "e909c22d6ddd8ce6e1266f9a3d90cca95bf9d140",
-      "result": "FAIL",
-      "cause": "launcher file contained literal escaped newline sequences and therefore omitted effective ZEROCUT_LAUNCH_DIR contract; Run101-118 regressions remained PASS"
-    },
-    "run119_repair": {
-      "sha": "1e9bb2f155cc748f628af142561896647e63070c",
-      "result": "PENDING_CI",
-      "changes": "real cmd newlines; Python>=3.11 gate; deterministic active runtime manifest; bundled FFmpeg PATH/ZEROCUT_LAUNCH_DIR integration; path-safe preflight; distinct error handling; process-handoff probe"
-    },
-    "run119_process_handoff": {
-      "run_id": 36151059168,
-      "sha": "0e44355e2479ad63554e91124cdace9f06e53450",
+    "run119_candidate_final": {
+      "run_id": 36152301262,
+      "sha": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
       "result": "PASS",
       "linux_regressions_through_run118": "PASS",
-      "windows_contract": "PASS",
-      "cmd_pythonw_process_handoff": "PASS"
-    },
-    "run119_ui_gate": {
-      "run_id": 36151129895,
-      "sha": "f4efb881fc0b67e7f12df43beb5a9f71957c3f0f",
-      "result": "FAIL",
-      "linux_regressions_through_run118": "PASS",
-      "windows_process_handoff": "PASS",
+      "windows_runtime_chain": "PASS",
+      "cmd_pythonw_handoff": "PASS",
       "active_runtime_status": "PASS",
-      "ffmpeg_fixture": "PASS",
-      "failure": "fixed-port HTTP probe did not observe UI; runtime already supports port fallback and CI did not know actual selected port"
+      "real_ui_health_same_step": "PASS"
     },
-    "run119_readiness_fix": {
-      "run_id": 36151873619,
-      "sha": "5d8f1b8ad37f30e1f6732c8da9b46134c8684bf9",
+    "run119_post_promotion": {
+      "run_id": 36152561984,
+      "sha": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
+      "result": "PASS"
+    },
+    "run120_contract": {
+      "run_id": 36152446803,
+      "sha": "0b7f370d763f563adbc8775e154c531f26310ee3",
+      "result": "PASS"
+    },
+    "run120_onefile_build": {
+      "run_id": 36152761535,
+      "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
       "result": "IN_PROGRESS",
-      "changes": "Run119 wrapper over verified Run118 chain; atomic ready-file with actual selected port/PID; /api/health; explicit runtime dependency manifest; fail-closed launcher preflight; CI probes actual ready URL"
+      "scope": "PyInstaller one-file build + --ai-status smoke + packaged UI readiness/health + artifact"
     }
   },
   "benchmark_baseline": {
-    "windows_real": "PROCESS_HANDOFF_PASS_REAL_UI_READINESS_FINAL_CI_IN_PROGRESS",
+    "windows_real": "RUN119_NATIVE_UI_PASS_AND_PROMOTED",
+    "windows_onefile": "BUILD_AND_REAL_UI_CI_IN_PROGRESS",
     "real_ps_r6_gameplay": "NOT_EXECUTED"
   },
   "implemented": [
     "Run118 verified transcript preview/apply -> changed timeline -> real export/QC",
-    "Run119 deterministic one-click launcher uses runtime/active_runtime.txt instead of filename guessing",
-    "Run119 prefers bundled Python and rejects unsupported Python below 3.11",
-    "Run119 integrates bundled FFmpeg/ffprobe through PATH and ZEROCUT_LAUNCH_DIR consumed by active runtime",
-    "Run119 path-safe runtime preflight prevents escaping package root and rejects missing/thin production runtime",
-    "Run119 visible launcher log and distinct error codes for Python, manifest, runtime/preflight and launch failures",
-    "Run119 Windows CI executes real cmd -> pythonw -> probe process handoff in addition to static contract checks",
-    "Run119 launcher forwards internal runtime arguments so CI can exercise the canonical app rather than only a stub",
-    "Run119 Windows gate now executes the active runtime --ai-status through ZeroCut.cmd",
-    "Run119 Windows gate launches the real local ZeroCut server and requires HTTP 200 with ZeroCut UI content before promotion",
-    "Run119 readiness wrapper layers over Run118 so transcript edit and export QC remain active",
-    "Run119 writes atomic readiness JSON with actual bound port and PID after successful server bind",
-    "Run119 exposes lightweight /api/health for Windows startup/package certification",
-    "Run119 active_runtime.required.txt explicitly protects the full 119->118->117->113->112 dependency chain",
-    "Run119 launcher fails closed when dependency manifest is missing, empty, escapes package root or contains invalid files",
-    "Run119 Windows CI probes the actual selected URL instead of assuming the requested port"
+    "Run119 deterministic one-click launcher uses explicit runtime manifest and protected dependency chain",
+    "Run119 prefers bundled Python, gates Python>=3.11, integrates FFmpeg/ffprobe and fails closed on invalid runtime dependencies",
+    "Run119 same-step Windows readiness verifier certifies atomic ready-file -> /api/health -> real UI before launcher success",
+    "Run119 native Windows candidate CI PASS and post-promotion main CI PASS",
+    "Run120 PyInstaller one-file entrypoint packages the verified Run119->118->117->113->112 runtime chain",
+    "Run120 build script creates ZeroCut.exe, checks size, --ai-status and SHA256",
+    "Run120 CI builds the real one-file executable, smokes packaged UI readiness and publishes the EXE artifact",
+    "Run120 one-file spec explicitly includes dynamically loaded runtime imports and disables UPX"
   ],
   "blockers": [
-    "Final Run119 CI 36151873619 must complete green before promotion",
-    "Bundled/single-file Windows packaging remains pending after launcher/UI gate",
-    "Browser-driven transcript/export E2E remains pending",
+    "Run120 one-file build/UI CI 36152761535 must complete green before promotion",
     "Real PlayStation Rainbow Six gameplay certification remains pending",
+    "Browser-driven transcript/export E2E remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Inspect final Run119 CI 36151873619 once. If FAIL, fix the exact Windows readiness/runtime step on the same candidate. If PASS, promote the verified Run119 launcher+real-UI readiness slice to main, record rollback/post-promotion verification, then open the bundled/single-file Windows packaging gate.",
-  "updated_at": "2026-09-25T17:07:00+02:00"
+  "next_action": "Inspect Run120 one-file CI 36152761535 once. If FAIL, fix the exact PyInstaller/build/packaged-UI step on candidate/run120-windows-onefile-20260925. If PASS, record ZeroCut.exe size/SHA256/artifact, promote the verified packaging slice, then return priority to real PlayStation/Rainbow Six end-to-end certification.",
+  "updated_at": "2026-09-25T17:15:00+02:00"
 }
