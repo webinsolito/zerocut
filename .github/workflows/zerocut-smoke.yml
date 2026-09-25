@@ -7,6 +7,7 @@ on:
     paths:
       - "src/**"
       - "runtime/**"
+      - "packaging/**"
       - "rollback/**"
       - "reports/**"
       - "tests/**"
@@ -67,6 +68,8 @@ jobs:
         run: python tests/test_run118_export_qc.py
       - name: Run119 Windows launcher contract
         run: python tests/test_run119_windows_launcher.py
+      - name: Run120 one-file packaging contract
+        run: python tests/test_run120_onefile_contract.py
 
   windows-launcher-smoke:
     runs-on: windows-latest
@@ -134,8 +137,8 @@ jobs:
         env:
           ZEROCUT_LAUNCHER_NO_PAUSE: "1"
           ZEROCUT_LAUNCHER_VERIFY_READY: "1"
-          ZEROCUT_HOME: ${{ github.workspace }}\\run119-home
-          ZEROCUT_READY_FILE: ${{ github.workspace }}\\run119-ready.json
+          ZEROCUT_HOME: ${{ github.workspace }}\run119-home
+          ZEROCUT_READY_FILE: ${{ github.workspace }}\run119-ready.json
         run: |
           call ZeroCut.cmd --no-browser --port 18765 --ready-file "%ZEROCUT_READY_FILE%"
           if errorlevel 1 (
@@ -149,7 +152,7 @@ jobs:
         if: always()
         shell: pwsh
         env:
-          ZEROCUT_READY_FILE: ${{ github.workspace }}\\run119-ready.json
+          ZEROCUT_READY_FILE: ${{ github.workspace }}\run119-ready.json
         run: |
           if (Test-Path $env:ZEROCUT_READY_FILE) {
             try {
@@ -157,3 +160,48 @@ jobs:
               Stop-Process -Id ([int]$ready.pid) -Force -ErrorAction SilentlyContinue
             } catch {}
           }
+
+  windows-onefile-build:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Verify one-file packaging contract
+        shell: pwsh
+        run: python tests/test_run120_onefile_contract.py
+      - name: Build and smoke ZeroCut.exe
+        shell: pwsh
+        run: .\packaging\windows\build_onefile.ps1
+      - name: Install FFmpeg for packaged UI smoke
+        shell: pwsh
+        run: |
+          choco install ffmpeg -y --no-progress
+          $ff = (Get-Command ffmpeg.exe).Source
+          (Split-Path $ff) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Smoke actual packaged ZeroCut.exe UI
+        shell: pwsh
+        run: |
+          $env:ZEROCUT_HOME = Join-Path $PWD "run120-onefile-home"
+          $ready = Join-Path $PWD "run120-onefile-ready.json"
+          Remove-Item $ready -Force -ErrorAction SilentlyContinue
+          $exe = Join-Path $PWD "dist\windows\ZeroCut.exe"
+          $proc = Start-Process -FilePath $exe -ArgumentList @("--no-browser","--port","18865","--ready-file",$ready) -PassThru
+          try {
+            python runtime\verify_ready.py $ready 60
+            if ($LASTEXITCODE -ne 0) { throw "Packaged UI readiness failed" }
+            $data = Get-Content $ready -Raw | ConvertFrom-Json
+            if (!$data.ok -or !$data.pid) { throw "Packaged readiness payload invalid" }
+            Write-Host "ZEROCUT_ONEFILE_UI=PASS"
+          } finally {
+            if (!$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
+          }
+      - name: Publish ZeroCut one-file artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ZeroCut-Windows-OneFile-${{ github.sha }}
+          path: dist/windows/ZeroCut.exe
+          if-no-files-found: error
+          retention-days: 7
