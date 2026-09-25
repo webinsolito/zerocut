@@ -1,10 +1,10 @@
 {
   "schema": 2,
   "current_run": 118,
-  "current_candidate": "candidate/run118-export-qc-20260925",
-  "last_good_commit": "1e6c838ad9d7a3aaaec4b699ff280c44c76ab476",
+  "current_candidate": "main",
+  "last_good_commit": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
   "rollback": "rollback/pre-run118-export-qc-20260925",
-  "current_gate": "P1_TRANSCRIPT_EDIT_EXPORT_QC_VERIFIED_CANDIDATE",
+  "current_gate": "P1_TRANSCRIPT_EDIT_EXPORT_QC_PROMOTED_VERIFIED",
   "completion_score": 75,
   "verification_score": 66,
   "gate_weights": {
@@ -76,6 +76,17 @@
       "decode": true,
       "product_export_command": true,
       "spoken_synthetic_audio": true
+    },
+    "run118_post_promotion": {
+      "run_id": 36138517351,
+      "sha": "5a4f3308148c2e530f2c450f0cad7d3aa2be340e",
+      "result": "PASS",
+      "input_duration": 12,
+      "edited_timeline_duration": 9.5,
+      "exported_duration": 9.5,
+      "removed_duration": 2.5,
+      "av_sync": true,
+      "decode": true
     }
   },
   "benchmark_baseline": {
@@ -97,12 +108,11 @@
     "Run118 adds UI status for expected/actual duration, file size, A/V sync and decode verification"
   ],
   "blockers": [
-    "Run118 candidate still needs promotion and post-promotion CI on main",
     "Browser-driven E2E of transcript selection/export controls has not been executed",
     "Real Windows/PlayStation Rainbow Six gameplay certification remains pending",
     "Windows one-click launcher/packaging is not yet certified on a clean Windows host",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "After Run118 promotion and post-promotion PASS, Run119: certify Windows readiness for the current end-to-end editor path, starting with a one-click launcher/build smoke that opens ZeroCut, locates bundled/private FFmpeg and local AI runtimes, loads a video, and reaches the UI without terminal steps.",
-  "updated_at": "2026-09-25T15:03:00+02:00"
+  "next_action": "Run119: certify Windows readiness for the current verified editor path. Build/test a one-click Windows launcher that starts ZeroCut without terminal steps, resolves the private/bundled FFmpeg tools and local AI runtime paths, opens the local UI, and runs a Windows smoke gate without weakening the existing Linux regression suite.",
+  "updated_at": "2026-09-25T15:05:00+02:00"
 }
