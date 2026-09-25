@@ -1,10 +1,10 @@
 {
   "schema": 2,
   "current_run": 117,
-  "current_candidate": "candidate/run117-transcript-ui",
-  "last_good_commit": "a8f03d089f59e4914167d4c2027ef78ea5d13369",
+  "current_candidate": "main",
+  "last_good_commit": "f8be8b8c940fc615ffbea4ac7ba0ce2adcad3f8a",
   "rollback": "rollback/pre-run117-transcript-ui-20260925",
-  "current_gate": "P1_TRANSCRIPT_EDIT_HTTP_UI_VERIFIED_CANDIDATE",
+  "current_gate": "P1_TRANSCRIPT_EDIT_HTTP_UI_PROMOTED_VERIFIED",
   "completion_score": 75,
   "verification_score": 66,
   "gate_weights": {
@@ -44,7 +44,26 @@
       "Run112 Whisper UX",
       "Run116 transcript regression",
       "Run117 transcript UI"
-    ]
+    ],
+    "post_promotion": {
+      "run_id": 36133037308,
+      "sha": "f8be8b8c940fc615ffbea4ac7ba0ce2adcad3f8a",
+      "result": "PASS",
+      "scope": [
+        "source truth",
+        "Run101",
+        "Run102",
+        "Run103",
+        "Run106",
+        "Run107",
+        "Run108",
+        "Run109",
+        "Run111 Whisper",
+        "Run112 Whisper UX",
+        "Run116 transcript regression",
+        "Run117 transcript UI"
+      ]
+    }
   },
   "benchmark_baseline": {
     "windows_real": "NOT_EXECUTED",
@@ -61,12 +80,11 @@
     "Run117 verifies transcript UI path preserves real timeline delta: 12.0s -> 9.5s"
   ],
   "blockers": [
-    "Run117 candidate still needs promotion and post-promotion CI on main",
     "Browser-driven E2E of transcript selection controls has not been executed",
     "Edited timeline -> export/QC shortened playable MP4 is not yet certified end-to-end",
     "Real Windows/PlayStation Rainbow Six gameplay certification remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Run118: after Run117 promotion, execute transcript edit on a synthetic spoken video, apply the shorter timeline, export a real MP4, run QC/ffprobe, and prove exported duration/content is consistent with the edited timeline and shorter than the input.",
-  "updated_at": "2026-09-25T14:08:00+02:00"
+  "next_action": "Run118: create a synthetic spoken video, persist transcript blocks, preview and apply a selected transcript removal, export a real MP4 from the resulting shorter timeline, then run QC/ffprobe and prove exported duration is consistent with the edited timeline and shorter than the input.",
+  "updated_at": "2026-09-25T14:10:00+02:00"
 }
