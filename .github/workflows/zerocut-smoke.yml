@@ -6,6 +6,7 @@ on:
     branches: [main, "candidate/**"]
     paths:
       - "src/**"
+      - "runtime/**"
       - "rollback/**"
       - "reports/**"
       - "tests/**"
@@ -78,8 +79,29 @@ jobs:
       - name: Validate launcher contract on Windows
         shell: pwsh
         run: python tests/test_run119_windows_launcher.py
-      - name: Verify cmd parser can resolve runtime
-        shell: cmd
+      - name: Verify configured full runtime on Windows
+        shell: pwsh
         run: |
-          dir /b src\ZeroCut_Run*_Candidate_*.pyw
-          where pythonw.exe
+          $rel = (Get-Content runtime\active_runtime.txt -Raw).Trim()
+          $target = Join-Path $PWD $rel
+          if (!(Test-Path $target)) { throw "Configured runtime missing: $target" }
+          if ((Get-Item $target).Length -le 100000) { throw "Configured runtime is not full-size" }
+          Write-Host "ACTIVE_RUNTIME=$rel"
+      - name: Execute real cmd to pythonw process handoff
+        shell: cmd
+        env:
+          ZEROCUT_APP_OVERRIDE: tests\run119_launcher_probe.pyw
+          ZEROCUT_LAUNCHER_WAIT: "1"
+          ZEROCUT_LAUNCHER_NO_PAUSE: "1"
+          ZEROCUT_PROBE_FILE: ${{ github.workspace }}\run119-launcher-probe.ok
+        run: |
+          call ZeroCut.cmd
+          if errorlevel 1 exit /b %errorlevel%
+          if not exist "%ZEROCUT_PROBE_FILE%" exit /b 20
+          type "%ZEROCUT_PROBE_FILE%"
+      - name: Verify process probe output
+        shell: pwsh
+        run: |
+          $probe = Get-Content run119-launcher-probe.ok -Raw
+          if ($probe -notmatch "ZEROCUT_RUN119_PROCESS_HANDOFF=PASS") { throw "Launcher process handoff marker missing" }
+          Write-Host $probe
