@@ -51,6 +51,11 @@ if defined ZEROCUT_LAUNCHER_WAIT (
   start "ZeroCut" /d "%~dp0" "%ZC_PYTHONW%" "%ZC_APP_ABS%" %*
 )
 if errorlevel 1 goto :launch_error
+if defined ZEROCUT_LAUNCHER_VERIFY_READY (
+  if not defined ZEROCUT_READY_FILE goto :ready_config_error
+  "%ZC_PYTHON%" "%~dp0runtime\verify_ready.py" "%ZEROCUT_READY_FILE%" 45 >>"%ZC_LOG%" 2>&1
+  if errorlevel 1 goto :ready_error
+)
 exit /b 0
 
 :no_python
@@ -88,3 +93,15 @@ exit /b 4
 echo ZeroCut non e riuscito ad avviarsi. Dettagli in zerocut-launcher.log.
 if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
 exit /b 5
+
+:ready_config_error
+>>"%ZC_LOG%" echo [%date% %time%] Readiness richiesto senza ZEROCUT_READY_FILE.
+echo ZeroCut non puo verificare l'avvio: file readiness non configurato.
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
+exit /b 8
+
+:ready_error
+>>"%ZC_LOG%" echo [%date% %time%] Readiness/UI locale non raggiungibile.
+echo ZeroCut non ha completato il controllo di avvio locale. Dettagli in zerocut-launcher.log.
+if not defined ZEROCUT_LAUNCHER_NO_PAUSE pause
+exit /b 8
