@@ -175,6 +175,29 @@ jobs:
       - name: Build and smoke ZeroCut.exe
         shell: pwsh
         run: .\packaging\windows\build_onefile.ps1
+      - name: Install FFmpeg for packaged UI smoke
+        shell: pwsh
+        run: |
+          choco install ffmpeg -y --no-progress
+          $ff = (Get-Command ffmpeg.exe).Source
+          (Split-Path $ff) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Smoke actual packaged ZeroCut.exe UI
+        shell: pwsh
+        run: |
+          $env:ZEROCUT_HOME = Join-Path $PWD "run120-onefile-home"
+          $ready = Join-Path $PWD "run120-onefile-ready.json"
+          Remove-Item $ready -Force -ErrorAction SilentlyContinue
+          $exe = Join-Path $PWD "dist\windows\ZeroCut.exe"
+          $proc = Start-Process -FilePath $exe -ArgumentList @("--no-browser","--port","18865","--ready-file",$ready) -PassThru
+          try {
+            python runtime\verify_ready.py $ready 60
+            if ($LASTEXITCODE -ne 0) { throw "Packaged UI readiness failed" }
+            $data = Get-Content $ready -Raw | ConvertFrom-Json
+            if (!$data.ok -or !$data.pid) { throw "Packaged readiness payload invalid" }
+            Write-Host "ZEROCUT_ONEFILE_UI=PASS"
+          } finally {
+            if (!$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
+          }
       - name: Publish ZeroCut one-file artifact
         uses: actions/upload-artifact@v4
         with:
