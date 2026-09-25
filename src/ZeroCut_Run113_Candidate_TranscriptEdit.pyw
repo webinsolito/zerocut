@@ -23,7 +23,7 @@ def prepare_transcript_edit(state,selected_ids,padding=0.04):
 
 def transcript_edit_metrics(state,receipt):
  before=state.get("segments") or []
- after=receipt.get("proposed_segments") or receipt.get("segments") or []
+ after=receipt.get("after") or receipt.get("proposed_segments") or receipt.get("segments") or []
  def total(rows): return round(sum(max(0.0,float(x.get("end",0))-float(x.get("start",0))) for x in rows if isinstance(x,dict)),3)
  b=total(before);a=total(after)
  return {"before_duration":b,"after_duration":a,"removed_duration":round(max(0.0,b-a),3),"before_segments":len(before),"after_segments":len(after),"timeline_changed":bool(after and (a!=b or after!=before))}
