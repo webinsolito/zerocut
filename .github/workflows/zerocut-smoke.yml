@@ -61,3 +61,5 @@ jobs:
         run: python tests/test_run116_transcript_regression.py
       - name: Run117 transcript edit UI
         run: python tests/test_run117_transcript_ui.py
+      - name: Run118 edited timeline real export and QC
+        run: python tests/test_run118_export_qc.py

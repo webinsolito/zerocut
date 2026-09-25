@@ -1,10 +1,10 @@
 {
   "schema": 2,
-  "current_run": 117,
-  "current_candidate": "main",
-  "last_good_commit": "f8be8b8c940fc615ffbea4ac7ba0ce2adcad3f8a",
-  "rollback": "rollback/pre-run117-transcript-ui-20260925",
-  "current_gate": "P1_TRANSCRIPT_EDIT_HTTP_UI_PROMOTED_VERIFIED",
+  "current_run": 118,
+  "current_candidate": "candidate/run118-export-qc-20260925",
+  "last_good_commit": "1e6c838ad9d7a3aaaec4b699ff280c44c76ab476",
+  "rollback": "rollback/pre-run118-export-qc-20260925",
+  "current_gate": "P1_TRANSCRIPT_EDIT_EXPORT_QC_VERIFIED_CANDIDATE",
   "completion_score": 75,
   "verification_score": 66,
   "gate_weights": {
@@ -63,6 +63,19 @@
         "Run116 transcript regression",
         "Run117 transcript UI"
       ]
+    },
+    "run118_candidate": {
+      "run_id": 36138253394,
+      "sha": "1e6c838ad9d7a3aaaec4b699ff280c44c76ab476",
+      "result": "PASS",
+      "input_duration": 12,
+      "edited_timeline_duration": 9.5,
+      "exported_duration": 9.5,
+      "removed_duration": 2.5,
+      "av_sync": true,
+      "decode": true,
+      "product_export_command": true,
+      "spoken_synthetic_audio": true
     }
   },
   "benchmark_baseline": {
@@ -77,14 +90,19 @@
     "Run117 adds selectable transcript blocks with Preview/Apply/Cancel UI",
     "Run117 adds GET /api/transcript/segments without rerunning Whisper",
     "Run117 displays explicit before/after/removed duration before apply",
-    "Run117 verifies transcript UI path preserves real timeline delta: 12.0s -> 9.5s"
+    "Run117 verifies transcript UI path preserves real timeline delta: 12.0s -> 9.5s",
+    "Run118 verifies preview -> commit -> real ZeroCut export_command -> verify_render_output on a shortened spoken-video timeline",
+    "Run118 persists an atomic zerocut.export-qc.v1 proof for successful real exports",
+    "Run118 exposes latest export QC through GET /api/export/qc/latest",
+    "Run118 adds UI status for expected/actual duration, file size, A/V sync and decode verification"
   ],
   "blockers": [
-    "Browser-driven E2E of transcript selection controls has not been executed",
-    "Edited timeline -> export/QC shortened playable MP4 is not yet certified end-to-end",
+    "Run118 candidate still needs promotion and post-promotion CI on main",
+    "Browser-driven E2E of transcript selection/export controls has not been executed",
     "Real Windows/PlayStation Rainbow Six gameplay certification remains pending",
+    "Windows one-click launcher/packaging is not yet certified on a clean Windows host",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Run118: create a synthetic spoken video, persist transcript blocks, preview and apply a selected transcript removal, export a real MP4 from the resulting shorter timeline, then run QC/ffprobe and prove exported duration is consistent with the edited timeline and shorter than the input.",
-  "updated_at": "2026-09-25T14:10:00+02:00"
+  "next_action": "After Run118 promotion and post-promotion PASS, Run119: certify Windows readiness for the current end-to-end editor path, starting with a one-click launcher/build smoke that opens ZeroCut, locates bundled/private FFmpeg and local AI runtimes, loads a video, and reaches the UI without terminal steps.",
+  "updated_at": "2026-09-25T15:03:00+02:00"
 }
