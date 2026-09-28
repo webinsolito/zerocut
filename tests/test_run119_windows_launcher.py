@@ -71,6 +71,9 @@ assert '"/api/health"' in chain_text
 assert "os.replace(tmp, READY_FILE)" in chain_text
 ready_text = READY_CHECK.read_text(encoding="utf-8")
 assert 'url + "/api/health"' in ready_text
+assert 'runtime = str(payload.get("runtime")' in ready_text
+assert 'str(health.get("runtime") or "").strip() != runtime' in ready_text
+assert '"Run119_WindowsReadiness"' not in ready_text
 assert 'url + "/"' in ready_text
 assert "ZEROCUT_READY_CHECK=PASS" in ready_text
 assert "zerocut-export-qc-run118" in chain_text, "Export QC wrapper missing"
