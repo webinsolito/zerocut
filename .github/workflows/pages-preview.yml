@@ -1,0 +1,49 @@
+name: ZeroCut Public Preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - candidate/run121-gameplay-director-20260925
+    paths:
+      - index.html
+      - .github/workflows/pages-preview.yml
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: zerocut-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout preview source
+        uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Prepare privacy-safe static preview
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+          touch _site/.nojekyll
+          grep -q "Preview web dimostrativa" _site/index.html
+          grep -q "Nessun file selezionato" _site/index.html
+          if grep -q "R6_ranked_match.mp4" _site/index.html; then
+            echo "Synthetic filename must not ship in public preview"
+            exit 1
+          fi
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+      - name: Deploy public preview
+        id: deployment
+        uses: actions/deploy-pages@v4
