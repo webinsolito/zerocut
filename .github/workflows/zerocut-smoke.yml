@@ -209,11 +209,22 @@ jobs:
             $desktop = Join-Path $proof "zerocut-desktop-1440.png"
             $mobile390 = Join-Path $proof "zerocut-mobile-390.png"
             $mobile430 = Join-Path $proof "zerocut-mobile-430.png"
-            & $browser --headless --disable-gpu --hide-scrollbars --window-size=1440,1000 --screenshot="$desktop" http://127.0.0.1:18865
-            & $browser --headless --disable-gpu --hide-scrollbars --window-size=390,844 --screenshot="$mobile390" http://127.0.0.1:18865
-            & $browser --headless --disable-gpu --hide-scrollbars --window-size=430,932 --screenshot="$mobile430" http://127.0.0.1:18865
-            foreach ($shot in @($desktop,$mobile390,$mobile430)) {
-              if (!(Test-Path $shot) -or (Get-Item $shot).Length -lt 10000) { throw "UI screenshot invalid: $shot" }
+            $captures = @(
+              @{ Path=$desktop; Size="1440,1000"; Profile="desktop" },
+              @{ Path=$mobile390; Size="390,844"; Profile="mobile390" },
+              @{ Path=$mobile430; Size="430,932"; Profile="mobile430" }
+            )
+            foreach ($capture in $captures) {
+              $profile = Join-Path $proof ("edge-" + $capture.Profile)
+              $args = @("--headless","--disable-gpu","--hide-scrollbars","--no-first-run","--user-data-dir=$profile","--window-size=$($capture.Size)","--screenshot=$($capture.Path)","http://127.0.0.1:18865")
+              $shotProc = Start-Process -FilePath $browser -ArgumentList $args -Wait -PassThru
+              if ($shotProc.ExitCode -ne 0) { throw "Headless browser failed: $($capture.Profile)" }
+              $deadline = (Get-Date).AddSeconds(15)
+              while ((!(Test-Path $capture.Path) -or (Get-Item $capture.Path -ErrorAction SilentlyContinue).Length -lt 10000) -and (Get-Date) -lt $deadline) {
+                Start-Sleep -Milliseconds 250
+              }
+              if (!(Test-Path $capture.Path) -or (Get-Item $capture.Path).Length -lt 10000) { throw "UI screenshot invalid: $($capture.Path)" }
+              Remove-Item $profile -Recurse -Force -ErrorAction SilentlyContinue
             }
             Write-Host "ZEROCUT_ONEFILE_UI=PASS"
             Write-Host "ZEROCUT_RUN121_SCREENSHOTS=PASS"
