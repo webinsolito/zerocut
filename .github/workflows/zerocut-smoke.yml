@@ -183,6 +183,9 @@ jobs:
           choco install ffmpeg -y --no-progress
           $ff = (Get-Command ffmpeg.exe).Source
           (Split-Path $ff) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Install exact viewport capture driver
+        shell: pwsh
+        run: python -m pip install --disable-pip-version-check selenium==4.36.0
       - name: Smoke actual packaged ZeroCut.exe UI
         shell: pwsh
         run: |
@@ -200,32 +203,8 @@ jobs:
             New-Item -ItemType Directory -Force -Path $proof | Out-Null
             Invoke-RestMethod "http://127.0.0.1:18865/api/ui/version" | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $proof "ui-version.json")
             Invoke-RestMethod "http://127.0.0.1:18865/api/health" | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $proof "health.json")
-            $browser = @(
-              "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe",
-              "${env:ProgramFiles}\Microsoft\Edge\Application\msedge.exe",
-              "${env:ProgramFiles}\Google\Chrome\Application\chrome.exe"
-            ) | Where-Object { Test-Path $_ } | Select-Object -First 1
-            if (!$browser) { throw "Headless browser missing for real UI proof" }
-            $desktop = Join-Path $proof "zerocut-desktop-1440.png"
-            $mobile390 = Join-Path $proof "zerocut-mobile-390.png"
-            $mobile430 = Join-Path $proof "zerocut-mobile-430.png"
-            $captures = @(
-              @{ Path=$desktop; Size="1440,1000"; Profile="desktop" },
-              @{ Path=$mobile390; Size="390,844"; Profile="mobile390" },
-              @{ Path=$mobile430; Size="430,932"; Profile="mobile430" }
-            )
-            foreach ($capture in $captures) {
-              $profile = Join-Path $proof ("edge-" + $capture.Profile)
-              $args = @("--headless","--disable-gpu","--hide-scrollbars","--no-first-run","--user-data-dir=$profile","--window-size=$($capture.Size)","--screenshot=$($capture.Path)","http://127.0.0.1:18865")
-              $shotProc = Start-Process -FilePath $browser -ArgumentList $args -Wait -PassThru
-              if ($shotProc.ExitCode -ne 0) { throw "Headless browser failed: $($capture.Profile)" }
-              $deadline = (Get-Date).AddSeconds(15)
-              while ((!(Test-Path $capture.Path) -or (Get-Item $capture.Path -ErrorAction SilentlyContinue).Length -lt 10000) -and (Get-Date) -lt $deadline) {
-                Start-Sleep -Milliseconds 250
-              }
-              if (!(Test-Path $capture.Path) -or (Get-Item $capture.Path).Length -lt 10000) { throw "UI screenshot invalid: $($capture.Path)" }
-              Remove-Item $profile -Recurse -Force -ErrorAction SilentlyContinue
-            }
+            python tests\capture_run121_ui.py --url http://127.0.0.1:18865 --out $proof
+            if ($LASTEXITCODE -ne 0) { throw "Exact viewport UI capture failed" }
             Write-Host "ZEROCUT_ONEFILE_UI=PASS"
             Write-Host "ZEROCUT_RUN121_SCREENSHOTS=PASS"
           } finally {
