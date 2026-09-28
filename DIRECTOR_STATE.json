@@ -2,9 +2,9 @@
   "schema": 2,
   "current_run": 121,
   "current_candidate": "main",
-  "last_good_commit": "1d2613bddca7b8c72b17d3dc6c12e3df966af7c6",
+  "last_good_commit": "64cdb1aeb4cadf09eb1abcb9a3db0e098dd122d6",
   "rollback": "rollback/pre-run121-gameplay-director-20260925",
-  "current_gate": "SPRINT_RELEASE_MAIN_VERIFIED_PUBLIC_PREVIEW_HTTP_CHECK_PENDING",
+  "current_gate": "SPRINT_V1_CORE_DELIVERED_PROJECT_INCOMPLETE",
   "completion_score": 80,
   "verification_score": 74,
   "gate_weights": {
@@ -119,12 +119,11 @@
     "Public static preview is privacy-safe and truthful: browser-local import/monitor/timeline/split work; Whisper/OCR/Director/export are explicitly not simulated"
   ],
   "blockers": [
-    "Independent HTTP marker verification of the deployed public preview is pending final workflow run",
-    "Real PlayStation/Rainbow Six gameplay certification is blocked because no real fixture is available",
+    "Real PlayStation/Rainbow Six gameplay certification remains blocked because no real fixture is available",
     "Creator-from-zero local engine remains incomplete"
   ],
-  "next_action": "Merge release-state/preview verifier PR, confirm its one public HTTP check PASS, then deliver ZeroCut.exe + public preview. Residual product work remains creator-from-zero local engine and real PS/R6 fixture certification.",
-  "updated_at": "2026-09-28T15:05:00+02:00",
+  "next_action": "Creator-local existing requirement: close the smallest safe input -> local planning -> editable timeline -> export/QC slice without disturbing the delivered editor. Separately, certify a real PS/Rainbow Six capture when an actual fixture is provided; do not substitute the synthetic encoded test.",
+  "updated_at": "2026-09-28T15:06:00+02:00",
   "score_note": "Historical scores intentionally frozen during delivery sprint; use sprint_delivery checklist for current release evidence instead of inventing percentage deltas.",
   "sprint_delivery": {
     "deadline": "2026-09-28T23:59:00+02:00",
@@ -150,8 +149,8 @@
       },
       {
         "requirement": "public web preview",
-        "status": "DEPLOYED_HTTP_VERIFY_PENDING",
-        "proof": "GitHub Pages branch deployment 36425582677 PASS; environment URL https://webinsolito.github.io/zerocut/; independent HTTP marker workflow prepared",
+        "status": "DONE_VERIFIED_HTTP",
+        "proof": "Pages deploy 36425582677 PASS; external HTTP verification 36425953902 PASS at https://webinsolito.github.io/zerocut/",
         "limit": "Static preview demonstrates browser-local import/monitor/timeline/split only; it never certifies local FFmpeg/AI"
       },
       {
@@ -177,6 +176,19 @@
         "430px"
       ],
       "notes": "Post-polish preview inspected from rendered screenshots; no horizontal overflow noted in mobile captures. Public HTTP marker verification workflow added for release."
+    },
+    "status": "V1_CORE_DELIVERED_PROJECT_INCOMPLETE",
+    "public_preview_http_verification": {
+      "run_id": 36425953902,
+      "result": "PASS",
+      "url": "https://webinsolito.github.io/zerocut/",
+      "checks": [
+        "HTTP fetch",
+        "ZeroCut AI marker",
+        "Preview web dimostrativa marker",
+        "Nessun file selezionato marker",
+        "no R6_ranked_match.mp4 synthetic filename"
+      ]
     }
   }
 }
