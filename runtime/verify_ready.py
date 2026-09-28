@@ -30,9 +30,12 @@ def main() -> int:
             pid = int(payload.get("pid") or 0)
             if not payload.get("ok") or not url or pid <= 0:
                 raise RuntimeError("invalid_ready_payload")
+            runtime = str(payload.get("runtime") or "").strip()
+            if not runtime:
+                raise RuntimeError("runtime_missing")
             status, health_raw = fetch(url + "/api/health")
             health = json.loads(health_raw.decode("utf-8"))
-            if status != 200 or not health.get("ok") or health.get("runtime") != "Run119_WindowsReadiness":
+            if status != 200 or not health.get("ok") or str(health.get("runtime") or "").strip() != runtime:
                 raise RuntimeError("health_invalid")
             ui_status, ui_raw = fetch(url + "/")
             if ui_status != 200 or b"ZeroCut" not in ui_raw:
