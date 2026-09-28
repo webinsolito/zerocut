@@ -40,7 +40,7 @@ def _enhance_premium_editor() -> None:
     <li data-stage="review"><span>3</span><b>Rivedi</b></li>
     <li data-stage="export"><span>4</span><b>Esporta</b></li>
   </ol>
-  <div class="zc-local-pill"><i></i><span>Locale · dati privati</span></div>
+  <div class="zc-local-pill"><i></i><span id="zcLocalStatus">Locale · dati privati</span></div>
 </section>
 """
             anchor = html.find("<main")
@@ -66,6 +66,19 @@ def _enhance_premium_editor() -> None:
     });
   };
   setStage("import");
+
+  const localStatus = document.getElementById("zcLocalStatus");
+  const engineText = document.getElementById("engineText");
+  const engineDot = document.getElementById("engineDot");
+  const mirrorEngine = () => {
+    if (!localStatus || !engineText) return;
+    const value = (engineText.textContent || "").trim();
+    localStatus.textContent = value && !/controllo/i.test(value) ? value : "Locale · dati privati";
+    rail.dataset.engine = engineDot && engineDot.classList.contains("bad") ? "error" : "ready";
+  };
+  if (engineText) new MutationObserver(mirrorEngine).observe(engineText, {childList:true, subtree:true, characterData:true});
+  if (engineDot) new MutationObserver(mirrorEngine).observe(engineDot, {attributes:true, attributeFilter:["class"]});
+  mirrorEngine();
 
   const bind = (id, stage) => {
     const node = document.getElementById(id);
@@ -98,6 +111,8 @@ def _enhance_premium_editor() -> None:
   --zc-cyan:#3dc9e8;--zc-good:#52d7a2;--zc-shadow:0 22px 70px rgba(0,0,0,.34);
 }
 html{background:var(--zc-bg)}
+*,*:before,*:after{box-sizing:border-box}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
 body{
   color:var(--zc-ink);
   background:
@@ -137,6 +152,8 @@ body:before{
 .zc-delivery-steps li[data-state="done"] span{color:#07130f;border-color:#49c894;background:var(--zc-good)}
 .zc-local-pill{justify-self:end;display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid var(--zc-line);border-radius:999px;color:#b1bac8;font-size:10px;background:rgba(3,6,10,.38)}
 .zc-local-pill i{width:7px;height:7px;border-radius:50%;background:var(--zc-good);box-shadow:0 0 12px rgba(82,215,162,.8)}
+.zc-delivery-flow[data-engine="error"] .zc-local-pill{border-color:rgba(255,108,125,.5);color:#ffc1c9}.zc-delivery-flow[data-engine="error"] .zc-local-pill i{background:#ff6c7d;box-shadow:0 0 12px rgba(255,108,125,.7)}
+body>.studioTopbar{display:none!important}
 main{width:min(1480px,calc(100% - 32px));margin-inline:auto}
 .panel,.card,section[class*="panel"]{
   border-color:var(--zc-line)!important;border-radius:16px!important;
@@ -169,13 +186,19 @@ input,textarea,select,pre{
   .zc-delivery-steps{grid-column:1/-1;grid-row:2;justify-content:center}
 }
 @media(max-width:560px){
-  .zc-delivery-flow{width:calc(100% - 20px);margin-top:10px;padding:11px;gap:11px}
+  .zc-delivery-flow{width:calc(100% - 20px);max-width:calc(100% - 20px);margin-top:10px;padding:11px;gap:11px;overflow:hidden}
   .zc-local-pill span{display:none}
   .zc-delivery-steps{width:100%;gap:4px;justify-content:space-between}
-  .zc-delivery-steps li{gap:4px;font-size:9px}
-  .zc-delivery-steps li:not(:last-child):after{width:8px}
+  .zc-delivery-steps li{gap:4px;font-size:9px;min-width:0}
+  .zc-delivery-steps li b{display:none}
+  .zc-delivery-steps li:not(:last-child):after{width:18px}
   .zc-delivery-steps span{width:23px;height:23px}
-  main{width:calc(100% - 20px)}
+  main{width:calc(100% - 20px);max-width:calc(100% - 20px);padding:8px!important}
+  main>*,main section,.panel,.card{min-width:0!important;max-width:100%!important}
+  .studioHero{width:100%!important;padding:34px 18px 38px!important;overflow:hidden}
+  .studioHero h1{width:100%;max-width:100%!important;font-size:clamp(32px,10vw,40px)!important;overflow-wrap:anywhere}
+  .studioHero>p,.studioDrop{width:100%;max-width:100%!important}
+  .studioDrop{min-height:210px!important;padding:18px 12px}
   .panel,.card,section[class*="panel"]{border-radius:14px!important}
 }
 @media(prefers-reduced-motion:reduce){button,.zc-transcript-row{transition:none!important}}
