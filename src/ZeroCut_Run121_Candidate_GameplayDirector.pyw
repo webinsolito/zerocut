@@ -430,6 +430,116 @@ def _enhance_gameplay_ui() -> None:
 @media(max-width:700px){.zc-gameplay-head{display:grid}.zc-gameplay-actions button{flex:1 1 100%}}
 '''
             css_path.write_text(css, encoding="utf-8")
+
+        premium_marker = "zerocut-premium-sprint-20260928"
+        js = js_path.read_text(encoding="utf-8")
+        if premium_marker not in js:
+            js += r'''
+// zerocut-premium-sprint-20260928
+(() => {
+  const icons = {
+    import: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>',
+    analyze: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3Z"/><path d="m18 15 .8 2.2L21 18l-2.2.8L18 21l-.8-2.2L15 18l2.2-.8L18 15Z"/></svg>',
+    cut: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v18M16 3v18M3 12h18"/></svg>',
+    preview: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7 8 5-8 5V7Z"/></svg>',
+    export: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0 4-4m-4 4-4-4"/><path d="M5 19h14"/></svg>',
+    undo: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7v5h5"/><path d="M5.5 12a7 7 0 1 0 2-5"/></svg>',
+    close: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>'
+  };
+  const choose = text => {
+    const v = text.toLowerCase();
+    if (/import|carica|media/.test(v)) return "import";
+    if (/analizz|whisper|trascriv|director/.test(v)) return "analyze";
+    if (/dividi|taglia|split/.test(v)) return "cut";
+    if (/anteprima|preview|riproduci/.test(v)) return "preview";
+    if (/esporta|export/.test(v)) return "export";
+    if (/annulla|undo|ripristina/.test(v)) return "undo";
+    if (/elimina|rimuovi|cancel/.test(v)) return "close";
+    return null;
+  };
+  document.querySelectorAll("button").forEach(btn => {
+    if (btn.dataset.zcPremiumIcon) return;
+    const key = choose(btn.textContent || "");
+    if (!key) return;
+    btn.insertAdjacentHTML("afterbegin", icons[key]);
+    btn.dataset.zcPremiumIcon = key;
+  });
+  document.documentElement.dataset.zcPremium = "2026";
+})();
+'''
+            js_path.write_text(js, encoding="utf-8")
+
+        css = css_path.read_text(encoding="utf-8")
+        if premium_marker not in css:
+            css += r'''
+/* zerocut-premium-sprint-20260928 */
+:root{
+  --zc-premium-bg:#070a0f;
+  --zc-premium-panel:#0d121a;
+  --zc-premium-panel-raised:#121a25;
+  --zc-premium-line:rgba(255,255,255,.075);
+  --zc-premium-line-strong:rgba(255,255,255,.13);
+  --zc-premium-accent:#8979ff;
+  --zc-premium-cyan:#62d3f1;
+  --zc-premium-green:#64dba5;
+}
+html,body{background:
+ radial-gradient(950px 430px at 48% -220px,rgba(105,95,221,.18),transparent 72%),
+ linear-gradient(180deg,#080b10,#06080c 72%)!important}
+.panel,.card,[class*="panel"]{
+ border-color:var(--zc-premium-line)!important;
+ border-radius:14px!important;
+ box-shadow:0 16px 40px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.025)!important;
+ background:linear-gradient(180deg,rgba(16,22,32,.97),rgba(10,15,22,.97))!important
+}
+button,.button,[role="button"]{
+ border-radius:10px!important;
+ transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease!important
+}
+button:hover,.button:hover,[role="button"]:hover{transform:translateY(-1px)}
+button svg,.button svg,[role="button"] svg{
+ width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:7px
+}
+button.primary,.primary{
+ background:linear-gradient(145deg,#8b7cff,#655ae7)!important;
+ border-color:rgba(174,164,255,.7)!important;
+ box-shadow:0 10px 24px rgba(102,88,231,.24),inset 0 1px 0 rgba(255,255,255,.16)!important
+}
+input,textarea,select{
+ border-radius:10px!important;border-color:var(--zc-premium-line-strong)!important;
+ background:#080c12!important;box-shadow:inset 0 1px 8px rgba(0,0,0,.22)!important
+}
+.timeline,.timeline-panel,[data-panel="timeline"]{overflow:hidden!important}
+.clip,.timeline-clip,[data-clip]{
+ border-radius:9px!important;
+ border-color:rgba(137,121,255,.32)!important;
+ background:linear-gradient(180deg,rgba(47,43,93,.78),rgba(24,29,46,.94))!important;
+ box-shadow:0 10px 22px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.055)!important
+}
+.clip:hover,.timeline-clip:hover,[data-clip]:hover{border-color:rgba(166,154,255,.7)!important}
+.inspector,.sidebar,.properties,[data-panel="inspector"]{
+ background:linear-gradient(165deg,rgba(22,31,47,.98),rgba(11,17,26,.98) 72%)!important
+}
+.preview,.monitor,.viewer,[data-panel="preview"]{
+ border-color:rgba(255,255,255,.06)!important;
+ box-shadow:0 24px 58px rgba(0,0,0,.31),inset 0 1px 0 rgba(255,255,255,.02)!important
+}
+.zc-gameplay-director{
+ border:1px solid var(--zc-premium-line)!important;border-radius:14px!important;padding:16px!important;
+ background:linear-gradient(155deg,rgba(25,35,54,.98),rgba(12,18,27,.98) 72%)!important;
+ box-shadow:0 18px 44px rgba(0,0,0,.26),inset 0 1px 0 rgba(255,255,255,.035)!important
+}
+.zc-gameplay-summary{
+ border-radius:10px!important;border-color:var(--zc-premium-line)!important;
+ background:rgba(255,255,255,.028)!important
+}
+.zc-whisper-badge[data-state="ok"]{background:rgba(100,219,165,.08)!important}
+@media(max-width:700px){
+ .panel,.card,[class*="panel"]{border-radius:13px!important}
+ button svg,.button svg,[role="button"] svg{width:14px;height:14px}
+}
+'''
+            css_path.write_text(css, encoding="utf-8")
     except OSError:
         return
 
