@@ -1,13 +1,13 @@
 {
   "project": "ZeroCut / ZeroCut Gaming AI",
-  "current_run": 112,
-  "current_candidate": "main",
-  "last_good_commit": "5584981a65f3fc8422fa30691437167fcbe39432",
-  "rollback": "rollback/pre-run112-whisper-ux-20260925",
-  "current_gate": "Run112 Whisper product UX promoted and post-promotion verified",
-  "completion_score": 52,
-  "verification_score": 53,
-  "score_basis": "Fixed gate weights established at Run112 bootstrap. Historical baseline was 51. Run112 adds +1 completion for a verified local-transcript product gate (real Whisper -> truthful usable summary -> user-visible review UX) and +2 verification for candidate + post-promotion CI evidence. Do not recompute history.",
+  "current_run": 121,
+  "current_candidate": "candidate/run121-premium-editor-20260928",
+  "last_good_commit": "da273d3d88e6e0cdde701b95d82620db1e7666ab",
+  "rollback": "candidate/run120-windows-onefile-clean-20260925",
+  "current_gate": "Run121 premium editor + Windows one-file visual proof pending CI",
+  "completion_score": 82,
+  "verification_score": 74,
+  "score_basis": "Run120 clean candidate and Windows one-file artifact are verified. Run121 adds the real editor polish and Windows screenshot proof but remains pending until CI completes. Creator engine local and real PS/R6 footage certification are not counted as complete.",
   "gate_weights": {
     "media_timeline_core": 20,
     "ai_analysis_whisper_ocr": 20,
@@ -44,9 +44,9 @@
     "timeline_change_requirement": "must differ coherently from input when transcript-driven auto-edit is requested"
   },
   "blockers": [
-    "Transcript selections are not yet wired through HTTP/UI to a reviewable timeline-removal proposal",
-    "Clean Windows V1 E2E not yet certified",
+    "Run121 candidate CI and Windows screenshots pending",
+    "Real PlayStation/Rainbow Six gameplay footage not available in the repository",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Run113: expose transcript segment selection to prepare_transcript_removal_transaction, add reviewable preview/apply/cancel flow, and verify on a synthetic spoken video that requested removal produces a non-identical coherent timeline before commit."
+  "next_action": "Inspect the Run121 candidate CI once. If green, review the three screenshots and ui-version/health proof from the Windows one-file artifact; fix any visual defect on the same candidate before promotion. Then certify a real PlayStation/Rainbow Six clip when an authorized real fixture is available. Keep creator_engine_local explicitly incomplete."
 }

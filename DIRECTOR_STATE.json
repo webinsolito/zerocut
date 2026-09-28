@@ -1,11 +1,11 @@
 {
   "schema": 2,
-  "current_run": 120,
-  "current_candidate": "candidate/run120-windows-onefile-20260925",
+  "current_run": 121,
+  "current_candidate": "candidate/run121-premium-editor-20260928",
   "last_good_commit": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
   "rollback": "rollback/pre-run120-windows-onefile-20260925",
-  "current_gate": "P4_WINDOWS_ONEFILE_BUILD_AND_UI_CI",
-  "completion_score": 80,
+  "current_gate": "P4_PREMIUM_EDITOR_WINDOWS_VISUAL_PROOF_CI",
+  "completion_score": 82,
   "verification_score": 74,
   "gate_weights": {
     "P0_windows_runtime": 25,
@@ -50,6 +50,17 @@
       "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
       "result": "IN_PROGRESS",
       "scope": "PyInstaller one-file build + --ai-status smoke + packaged UI readiness/health + artifact"
+    },
+    "run120_clean_candidate": {
+      "run_id": 36154179847,
+      "sha": "da273d3d88e6e0cdde701b95d82620db1e7666ab",
+      "result": "PASS",
+      "artifact_id": 10872693208,
+      "artifact_sha256": "0c2be684708a31feb0d0907dd2a08010642c1f6a9444b56c302fd0db7b2d53cd"
+    },
+    "run121_candidate": {
+      "result": "PENDING",
+      "scope": "real embedded editor polish + Windows one-file screenshots 1440/390/430"
     }
   },
   "benchmark_baseline": {
@@ -66,14 +77,16 @@
     "Run120 PyInstaller one-file entrypoint packages the verified Run119->118->117->113->112 runtime chain",
     "Run120 build script creates ZeroCut.exe, checks size, --ai-status and SHA256",
     "Run120 CI builds the real one-file executable, smokes packaged UI readiness and publishes the EXE artifact",
-    "Run120 one-file spec explicitly includes dynamically loaded runtime imports and disables UPX"
+    "Run120 one-file spec explicitly includes dynamically loaded runtime imports and disables UPX",
+    "Run121 premium visual layer is applied to the real embedded editor, preserving the verified editing/export core",
+    "Run121 Windows build captures executable UI evidence at desktop, 390px and 430px and publishes it with ZeroCut.exe"
   ],
   "blockers": [
-    "Run120 one-file build/UI CI 36152761535 must complete green before promotion",
+    "Run121 candidate CI and Windows screenshot artifact must complete green before review/promotion",
     "Real PlayStation Rainbow Six gameplay certification remains pending",
-    "Browser-driven transcript/export E2E remains pending",
+    "Browser-driven interactive transcript/export E2E remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Inspect Run120 one-file CI 36152761535 once. If FAIL, fix the exact PyInstaller/build/packaged-UI step on candidate/run120-windows-onefile-20260925. If PASS, record ZeroCut.exe size/SHA256/artifact, promote the verified packaging slice, then return priority to real PlayStation/Rainbow Six end-to-end certification.",
-  "updated_at": "2026-09-25T17:15:00+02:00"
+  "next_action": "Inspect the Run121 candidate CI once. If green, review the three screenshots and ui-version/health proof from the Windows one-file artifact; fix any visual defect on the same candidate before promotion. Then certify a real PlayStation/Rainbow Six clip when an authorized real fixture is available. Keep creator_engine_local explicitly incomplete.",
+  "updated_at": "2026-09-28T18:41:00+02:00"
 }

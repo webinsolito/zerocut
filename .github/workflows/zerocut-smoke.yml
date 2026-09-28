@@ -70,6 +70,8 @@ jobs:
         run: python tests/test_run119_windows_launcher.py
       - name: Run120 one-file packaging contract
         run: python tests/test_run120_onefile_contract.py
+      - name: Run121 premium editor assets
+        run: python tests/test_run121_premium_editor.py
 
   windows-launcher-smoke:
     runs-on: windows-latest
@@ -194,7 +196,27 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Packaged UI readiness failed" }
             $data = Get-Content $ready -Raw | ConvertFrom-Json
             if (!$data.ok -or !$data.pid) { throw "Packaged readiness payload invalid" }
+            $proof = Join-Path $PWD "dist\windows\proof"
+            New-Item -ItemType Directory -Force -Path $proof | Out-Null
+            Invoke-RestMethod "http://127.0.0.1:18865/api/ui/version" | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $proof "ui-version.json")
+            Invoke-RestMethod "http://127.0.0.1:18865/api/health" | ConvertTo-Json -Depth 5 | Set-Content (Join-Path $proof "health.json")
+            $browser = @(
+              "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe",
+              "${env:ProgramFiles}\Microsoft\Edge\Application\msedge.exe",
+              "${env:ProgramFiles}\Google\Chrome\Application\chrome.exe"
+            ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+            if (!$browser) { throw "Headless browser missing for real UI proof" }
+            $desktop = Join-Path $proof "zerocut-desktop-1440.png"
+            $mobile390 = Join-Path $proof "zerocut-mobile-390.png"
+            $mobile430 = Join-Path $proof "zerocut-mobile-430.png"
+            & $browser --headless --disable-gpu --hide-scrollbars --window-size=1440,1000 --screenshot="$desktop" http://127.0.0.1:18865
+            & $browser --headless --disable-gpu --hide-scrollbars --window-size=390,844 --screenshot="$mobile390" http://127.0.0.1:18865
+            & $browser --headless --disable-gpu --hide-scrollbars --window-size=430,932 --screenshot="$mobile430" http://127.0.0.1:18865
+            foreach ($shot in @($desktop,$mobile390,$mobile430)) {
+              if (!(Test-Path $shot) -or (Get-Item $shot).Length -lt 10000) { throw "UI screenshot invalid: $shot" }
+            }
             Write-Host "ZEROCUT_ONEFILE_UI=PASS"
+            Write-Host "ZEROCUT_RUN121_SCREENSHOTS=PASS"
           } finally {
             if (!$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
           }
@@ -202,6 +224,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ZeroCut-Windows-OneFile-${{ github.sha }}
-          path: dist/windows/ZeroCut.exe
+          path: |
+            dist/windows/ZeroCut.exe
+            dist/windows/proof/**
           if-no-files-found: error
           retention-days: 7
