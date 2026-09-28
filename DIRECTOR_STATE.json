@@ -1,10 +1,10 @@
 {
   "schema": 2,
   "current_run": 121,
-  "current_candidate": "candidate/run121-gameplay-director-20260925",
-  "last_good_commit": "342127a3b5c79923d9012e8218862f864c817ea7",
+  "current_candidate": "main",
+  "last_good_commit": "1d2613bddca7b8c72b17d3dc6c12e3df966af7c6",
   "rollback": "rollback/pre-run121-gameplay-director-20260925",
-  "current_gate": "SPRINT_RELEASE_READY_FOR_PROTECTED_MAIN_PROMOTION",
+  "current_gate": "SPRINT_RELEASE_MAIN_VERIFIED_PUBLIC_PREVIEW_HTTP_CHECK_PENDING",
   "completion_score": 80,
   "verification_score": 74,
   "gate_weights": {
@@ -70,6 +70,30 @@
       "run_id": 36424867431,
       "result": "FAIL_BEFORE_STEPS",
       "note": "github-pages deployment environment rejected candidate-branch job before workflow steps; Pages workflow changed to release from protected main only"
+    },
+    "run121_main_release": {
+      "run_id": 36425169717,
+      "sha": "1d2613bddca7b8c72b17d3dc6c12e3df966af7c6",
+      "result": "PASS",
+      "source_truth": "PASS",
+      "windows_launcher_ui": "PASS",
+      "windows_onefile_build": "PASS",
+      "artifact_id": 10971022610,
+      "artifact_name": "ZeroCut-Windows-OneFile-1d2613bddca7b8c72b17d3dc6c12e3df966af7c6",
+      "artifact_archive_bytes": 9579006,
+      "artifact_digest": "sha256:12c3628acc141836d70fc8da4bd49cf3f88256201de1a06e2c1bc1be68951e88",
+      "exe_bytes": 9743431,
+      "exe_sha256": "8f4c9f98fa26477398af18e207c1d476bdbd2f771e7df964df60167a6edaec9b",
+      "artifact_expires_at": "2026-10-05T12:58:19Z"
+    },
+    "public_preview_pages": {
+      "run_id": 36425582677,
+      "source_branch": "gh-pages",
+      "sha": "31899db3745e9f7e2a759cfe8ef1fead7bdd95f5",
+      "result": "PASS",
+      "deployment_status": "SUCCESS",
+      "url": "https://webinsolito.github.io/zerocut/",
+      "proof": "GitHub Pages deploy job 108938820943 reported success and evaluated environment URL"
     }
   },
   "benchmark_baseline": {
@@ -95,12 +119,12 @@
     "Public static preview is privacy-safe and truthful: browser-local import/monitor/timeline/split work; Whisper/OCR/Director/export are explicitly not simulated"
   ],
   "blockers": [
-    "Public Pages deployment must run from protected main after promotion and then be opened externally",
+    "Independent HTTP marker verification of the deployed public preview is pending final workflow run",
     "Real PlayStation/Rainbow Six gameplay certification is blocked because no real fixture is available",
     "Creator-from-zero local engine remains incomplete"
   ],
-  "next_action": "Open/merge protected Run121 sprint PR to main; verify post-merge Source Truth + Windows/one-file once; verify main Pages deployment and open the public preview. If release checks pass, deliver the artifact and preview while explicitly listing creator-local and real-PS/R6 as residuals.",
-  "updated_at": "2026-09-28T15:10:00+02:00",
+  "next_action": "Merge release-state/preview verifier PR, confirm its one public HTTP check PASS, then deliver ZeroCut.exe + public preview. Residual product work remains creator-from-zero local engine and real PS/R6 fixture certification.",
+  "updated_at": "2026-09-28T15:05:00+02:00",
   "score_note": "Historical scores intentionally frozen during delivery sprint; use sprint_delivery checklist for current release evidence instead of inventing percentage deltas.",
   "sprint_delivery": {
     "deadline": "2026-09-28T23:59:00+02:00",
@@ -126,9 +150,9 @@
       },
       {
         "requirement": "public web preview",
-        "status": "PENDING_MAIN_DEPLOY",
-        "proof": "privacy-safe clickable root index committed; Pages workflow prepared for main",
-        "limit": "Candidate Pages job failed before steps; static preview never certifies local FFmpeg/AI"
+        "status": "DEPLOYED_HTTP_VERIFY_PENDING",
+        "proof": "GitHub Pages branch deployment 36425582677 PASS; environment URL https://webinsolito.github.io/zerocut/; independent HTTP marker workflow prepared",
+        "limit": "Static preview demonstrates browser-local import/monitor/timeline/split only; it never certifies local FFmpeg/AI"
       },
       {
         "requirement": "real PS/R6 gameplay certification",
@@ -142,6 +166,17 @@
         "proof": "Existing requirement remains open",
         "limit": "Not removed from scope; no 100% claim"
       }
-    ]
+    ],
+    "main_release_sha": "1d2613bddca7b8c72b17d3dc6c12e3df966af7c6",
+    "public_preview_url": "https://webinsolito.github.io/zerocut/",
+    "visual_verification": {
+      "local_render": "PASS",
+      "viewports": [
+        "desktop",
+        "390px",
+        "430px"
+      ],
+      "notes": "Post-polish preview inspected from rendered screenshots; no horizontal overflow noted in mobile captures. Public HTTP marker verification workflow added for release."
+    }
   }
 }
