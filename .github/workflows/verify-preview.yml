@@ -1,0 +1,32 @@
+name: Verify ZeroCut Public Preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/verify-preview.yml
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Open deployed ZeroCut preview
+        run: |
+          set -euo pipefail
+          url="https://webinsolito.github.io/zerocut/"
+          html="$(curl --fail --silent --show-error --location --retry 4 --retry-delay 2 "$url")"
+          printf '%s' "$html" | grep -q "ZeroCut AI"
+          printf '%s' "$html" | grep -q "Preview web dimostrativa"
+          printf '%s' "$html" | grep -q "Nessun file selezionato"
+          if printf '%s' "$html" | grep -q "R6_ranked_match.mp4"; then
+            echo "FAIL: synthetic media filename leaked into public preview"
+            exit 1
+          fi
+          echo "ZEROCUT_PUBLIC_PREVIEW=PASS"
+          echo "ZEROCUT_PUBLIC_URL=$url"
