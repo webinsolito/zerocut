@@ -2,11 +2,11 @@
   "project": "ZeroCut / ZeroCut Gaming AI",
   "current_run": 121,
   "current_candidate": "candidate/run121-premium-editor-20260928",
-  "last_good_commit": "da273d3d88e6e0cdde701b95d82620db1e7666ab",
+  "last_good_commit": "eebb0e73d2689be49b06cd8a61e503233d689f65",
   "rollback": "candidate/run120-windows-onefile-clean-20260925",
-  "current_gate": "Run121 premium editor + Windows one-file visual proof pending CI",
+  "current_gate": "RUN121_CANDIDATE_VERIFIED_MAIN_DIVERGED_NO_FORCE_PROMOTION",
   "completion_score": 82,
-  "verification_score": 74,
+  "verification_score": 78,
   "score_basis": "Run120 clean candidate and Windows one-file artifact are verified. Run121 adds the real editor polish and Windows screenshot proof but remains pending until CI completes. Creator engine local and real PS/R6 footage certification are not counted as complete.",
   "gate_weights": {
     "media_timeline_core": 20,
@@ -35,7 +35,21 @@
       "Run109",
       "Run111 real Whisper",
       "Run112 Whisper UX"
-    ]
+    ],
+    "run121_candidate": {
+      "run_id": 36454422384,
+      "sha": "eebb0e73d2689be49b06cd8a61e503233d689f65",
+      "result": "PASS",
+      "artifact_id": 10984293037,
+      "artifact_digest": "sha256:fc453d4e74896b8ab52a2d1076da7f27e85cf42510a50c26627015e456ae68c3",
+      "exe_sha256": "60d692d83e462d960f6ccffdc4e3e49b7e5c53c33c2bcb58020c1124a3e876b3",
+      "screenshots": [
+        "1440x1000",
+        "390x844",
+        "430x932"
+      ],
+      "horizontal_overflow": false
+    }
   },
   "benchmark_baseline": {
     "whisper_gate": "real local inference PASS on candidate and main",
@@ -44,9 +58,11 @@
     "timeline_change_requirement": "must differ coherently from input when transcript-driven auto-edit is requested"
   },
   "blockers": [
-    "Run121 candidate CI and Windows screenshots pending",
-    "Real PlayStation/Rainbow Six gameplay footage not available in the repository",
+    "main is divergent from the verified candidate; force promotion is forbidden",
+    "Real PlayStation Rainbow Six gameplay certification remains pending because no authorized real fixture is present",
+    "Browser-driven interactive transcript/export E2E remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Inspect the Run121 candidate CI once. If green, review the three screenshots and ui-version/health proof from the Windows one-file artifact; fix any visual defect on the same candidate before promotion. Then certify a real PlayStation/Rainbow Six clip when an authorized real fixture is available. Keep creator_engine_local explicitly incomplete."
+  "next_action": "Reconcile the divergent main branch through a reviewed merge/rebase without force, rerun the full Windows one-file gates, then certify one authorized real PlayStation/Rainbow Six clip end to end. Keep creator_engine_local explicitly incomplete.",
+  "updated_at": "2026-09-28T18:58:00+02:00"
 }
