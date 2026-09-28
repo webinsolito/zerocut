@@ -2,9 +2,9 @@
   "schema": 2,
   "current_run": 121,
   "current_candidate": "candidate/run121-gameplay-director-20260925",
-  "last_good_commit": "3ead98de27e682f88afae16162e34a4baed55aba",
+  "last_good_commit": "342127a3b5c79923d9012e8218862f864c817ea7",
   "rollback": "rollback/pre-run121-gameplay-director-20260925",
-  "current_gate": "P1_GAMEPLAY_DIRECTOR_REAL_PIPELINE_CANDIDATE_CI",
+  "current_gate": "SPRINT_RELEASE_READY_FOR_PROTECTED_MAIN_PROMOTION",
   "completion_score": 80,
   "verification_score": 74,
   "gate_weights": {
@@ -52,16 +52,30 @@
       "result": "PASS"
     },
     "run121_candidate": {
-      "run_id": 36163203960,
-      "sha": "ca19258b14e701a5f207b33b05e57d6477dbf01f",
-      "result": "IN_PROGRESS",
-      "scope": "real encoded gameplay-like MP4 -> local structural analysis + Whisper + RapidOCR -> conservative R6 evidence -> Director preview/apply/cancel -> changed timeline -> FFmpeg export -> ffprobe/A-V/decode QC; Windows active runtime + one-file packaging"
+      "run_id": 36424229966,
+      "sha": "342127a3b5c79923d9012e8218862f864c817ea7",
+      "result": "PASS",
+      "source_truth": "PASS",
+      "gameplay_director_e2e": "PASS",
+      "windows_launcher_ui": "PASS",
+      "windows_onefile_build": "PASS",
+      "packaged_ui_readiness": "PASS",
+      "artifact_id": 10970551738,
+      "artifact_name": "ZeroCut-Windows-OneFile-342127a3b5c79923d9012e8218862f864c817ea7",
+      "artifact_archive_bytes": 9579922,
+      "artifact_digest": "sha256:ee9843becdf3b619f7d7b09bb4b84e12967ec3ba1e7e0883b5227928ff321d33",
+      "artifact_expires_at": "2026-10-05T12:49:49Z"
+    },
+    "public_preview_candidate_attempt": {
+      "run_id": 36424867431,
+      "result": "FAIL_BEFORE_STEPS",
+      "note": "github-pages deployment environment rejected candidate-branch job before workflow steps; Pages workflow changed to release from protected main only"
     }
   },
   "benchmark_baseline": {
-    "windows_real": "RUN120_ONEFILE_PROMOTED_POST_PROMOTION_PASS",
-    "gameplay_director": "RUN121_CANDIDATE_CI_IN_PROGRESS",
-    "real_ps_r6_gameplay": "NOT_EXECUTED"
+    "windows_real": "RUN121_NATIVE_AND_ONEFILE_UI_PASS_ON_WINDOWS_ACTIONS",
+    "gameplay_director": "RUN121_E2E_PASS_WITH_ENCODED_TEST_FIXTURE",
+    "real_ps_r6_gameplay": "NOT_EXECUTED_NO_REAL_FIXTURE_AVAILABLE"
   },
   "implemented": [
     "Run118 verified transcript preview/apply -> changed timeline -> real export/QC",
@@ -73,14 +87,61 @@
     "Run121 candidate integrates local Whisper and bounded RapidOCR evidence into the gameplay plan",
     "Run121 candidate activates the new Director in Windows launcher and PyInstaller one-file chain",
     "Run121 candidate E2E test requires real encoded MP4, timeline delta, real FFmpeg export and duration/A-V/decode QC",
-    "Run121 CI restores the real RapidOCR certification gate before the gameplay E2E"
+    "Run121 CI restores the real RapidOCR certification gate before the gameplay E2E",
+    "Run121 E2E passes encoded test video -> local structural analysis + real local Whisper/RapidOCR -> conservative gameplay Director -> preview/apply/cancel -> changed editable timeline -> FFmpeg export -> duration/A-V/decode QC",
+    "Run121 Windows launcher starts and certifies the actual active local UI using runtime-consistent readiness rather than a Run119 hardcode",
+    "Run121 one-file ZeroCut.exe builds, starts, passes packaged UI readiness and publishes an Actions artifact",
+    "Run121 actual app web assets receive coherent SVG action icons, soft layered depth, refined timeline clips, inspector/preview materials and responsive polish",
+    "Public static preview is privacy-safe and truthful: browser-local import/monitor/timeline/split work; Whisper/OCR/Director/export are explicitly not simulated"
   ],
   "blockers": [
-    "Run121 candidate CI 36163203960 is still in progress; completion/verification scores are frozen until it passes",
-    "Real PlayStation Rainbow Six gameplay fixture/certification remains pending and is not substituted by the synthetic encoded fixture",
-    "Browser-driven click-level E2E remains pending",
+    "Public Pages deployment must run from protected main after promotion and then be opened externally",
+    "Real PlayStation/Rainbow Six gameplay certification is blocked because no real fixture is available",
     "Creator-from-zero local engine remains incomplete"
   ],
-  "next_action": "On the next execution inspect Run121 CI 36163203960 once. If FAIL, fix the exact failing Run121 gameplay/Windows/packaging step on the same candidate. If PASS, record real E2E metrics and EXE artifact/hash, promote candidate/run121-gameplay-director-20260925 to main with rollback preserved, verify main once, then acquire/certify a real PlayStation Rainbow Six gameplay fixture.",
-  "updated_at": "2026-09-25T18:55:00+02:00"
+  "next_action": "Open/merge protected Run121 sprint PR to main; verify post-merge Source Truth + Windows/one-file once; verify main Pages deployment and open the public preview. If release checks pass, deliver the artifact and preview while explicitly listing creator-local and real-PS/R6 as residuals.",
+  "updated_at": "2026-09-28T15:10:00+02:00",
+  "score_note": "Historical scores intentionally frozen during delivery sprint; use sprint_delivery checklist for current release evidence instead of inventing percentage deltas.",
+  "sprint_delivery": {
+    "deadline": "2026-09-28T23:59:00+02:00",
+    "release_candidate_sha": "342127a3b5c79923d9012e8218862f864c817ea7",
+    "checklist": [
+      {
+        "requirement": "video -> analysis/Whisper/OCR -> Director -> timeline -> preview/apply/cancel -> export/QC",
+        "status": "DONE_TEST_FIXTURE",
+        "proof": "Run 36424229966 source-truth-smoke PASS including Run121 E2E; encoded local test video; real local Whisper/RapidOCR; FFmpeg/ffprobe QC",
+        "limit": "Not a real PlayStation/Rainbow Six capture"
+      },
+      {
+        "requirement": "Windows one-click local EXE",
+        "status": "DONE_CI_WINDOWS",
+        "proof": "Run 36424229966 windows-launcher-smoke + windows-onefile-build PASS; artifact 10970551738",
+        "limit": "Verified on GitHub Windows runner, not user's physical PC"
+      },
+      {
+        "requirement": "premium editor UI",
+        "status": "DONE_CODE_AND_LOCAL_VISUAL_CHECK",
+        "proof": "Actual Run121 app asset enhancer + local rendered screenshots at desktop, 390px and 430px",
+        "limit": "No physical Windows screenshot capture in this sprint"
+      },
+      {
+        "requirement": "public web preview",
+        "status": "PENDING_MAIN_DEPLOY",
+        "proof": "privacy-safe clickable root index committed; Pages workflow prepared for main",
+        "limit": "Candidate Pages job failed before steps; static preview never certifies local FFmpeg/AI"
+      },
+      {
+        "requirement": "real PS/R6 gameplay certification",
+        "status": "BLOCKED_NO_REAL_FIXTURE",
+        "proof": "No real fixture available in repository/session",
+        "limit": "Synthetic encoded test fixture is explicitly labeled"
+      },
+      {
+        "requirement": "creator-from-zero local engine",
+        "status": "INCOMPLETE",
+        "proof": "Existing requirement remains open",
+        "limit": "Not removed from scope; no 100% claim"
+      }
+    ]
+  }
 }
