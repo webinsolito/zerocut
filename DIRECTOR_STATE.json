@@ -2,11 +2,11 @@
   "schema": 2,
   "current_run": 121,
   "current_candidate": "candidate/run121-premium-editor-20260928",
-  "last_good_commit": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
+  "last_good_commit": "eebb0e73d2689be49b06cd8a61e503233d689f65",
   "rollback": "rollback/pre-run120-windows-onefile-20260925",
-  "current_gate": "P4_PREMIUM_EDITOR_WINDOWS_VISUAL_PROOF_CI",
+  "current_gate": "RUN121_CANDIDATE_VERIFIED_MAIN_DIVERGED_NO_FORCE_PROMOTION",
   "completion_score": 82,
-  "verification_score": 74,
+  "verification_score": 78,
   "gate_weights": {
     "P0_windows_runtime": 25,
     "P1_core_editing": 25,
@@ -59,8 +59,18 @@
       "artifact_sha256": "0c2be684708a31feb0d0907dd2a08010642c1f6a9444b56c302fd0db7b2d53cd"
     },
     "run121_candidate": {
-      "result": "PENDING",
-      "scope": "real embedded editor polish + Windows one-file screenshots 1440/390/430"
+      "run_id": 36454422384,
+      "sha": "eebb0e73d2689be49b06cd8a61e503233d689f65",
+      "result": "PASS",
+      "artifact_id": 10984293037,
+      "artifact_digest": "sha256:fc453d4e74896b8ab52a2d1076da7f27e85cf42510a50c26627015e456ae68c3",
+      "exe_sha256": "60d692d83e462d960f6ccffdc4e3e49b7e5c53c33c2bcb58020c1124a3e876b3",
+      "screenshots": [
+        "1440x1000",
+        "390x844",
+        "430x932"
+      ],
+      "horizontal_overflow": false
     }
   },
   "benchmark_baseline": {
@@ -82,11 +92,11 @@
     "Run121 Windows build captures executable UI evidence at desktop, 390px and 430px and publishes it with ZeroCut.exe"
   ],
   "blockers": [
-    "Run121 candidate CI and Windows screenshot artifact must complete green before review/promotion",
-    "Real PlayStation Rainbow Six gameplay certification remains pending",
+    "main is divergent from the verified candidate; force promotion is forbidden",
+    "Real PlayStation Rainbow Six gameplay certification remains pending because no authorized real fixture is present",
     "Browser-driven interactive transcript/export E2E remains pending",
     "Creator engine local remains incomplete"
   ],
-  "next_action": "Inspect the Run121 candidate CI once. If green, review the three screenshots and ui-version/health proof from the Windows one-file artifact; fix any visual defect on the same candidate before promotion. Then certify a real PlayStation/Rainbow Six clip when an authorized real fixture is available. Keep creator_engine_local explicitly incomplete.",
-  "updated_at": "2026-09-28T18:41:00+02:00"
+  "next_action": "Reconcile the divergent main branch through a reviewed merge/rebase without force, rerun the full Windows one-file gates, then certify one authorized real PlayStation/Rainbow Six clip end to end. Keep creator_engine_local explicitly incomplete.",
+  "updated_at": "2026-09-28T18:58:00+02:00"
 }
