@@ -1,10 +1,10 @@
 {
   "schema": 2,
-  "current_run": 120,
-  "current_candidate": "candidate/run120-windows-onefile-clean-20260925",
-  "last_good_commit": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
-  "rollback": "rollback/pre-run120-promotion-20260925-1518",
-  "current_gate": "P4_WINDOWS_ONEFILE_CLEAN_CANDIDATE_CI",
+  "current_run": 121,
+  "current_candidate": "candidate/run121-gameplay-director-20260925",
+  "last_good_commit": "342127a3b5c79923d9012e8218862f864c817ea7",
+  "rollback": "rollback/pre-run121-gameplay-director-20260925",
+  "current_gate": "SPRINT_RELEASE_READY_FOR_PROTECTED_MAIN_PROMOTION",
   "completion_score": 80,
   "verification_score": 74,
   "gate_weights": {
@@ -25,33 +25,12 @@
       "av_sync": true,
       "decode": true
     },
-    "run119_candidate_final": {
-      "run_id": 36152301262,
-      "sha": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
-      "result": "PASS",
-      "linux_regressions_through_run118": "PASS",
-      "windows_runtime_chain": "PASS",
-      "cmd_pythonw_handoff": "PASS",
-      "active_runtime_status": "PASS",
-      "real_ui_health_same_step": "PASS"
-    },
     "run119_post_promotion": {
       "run_id": 36152561984,
       "sha": "9d9e173c3486ac60ba269a018ae4d67eeb4a4cee",
       "result": "PASS"
     },
-    "run120_contract": {
-      "run_id": 36152446803,
-      "sha": "0b7f370d763f563adbc8775e154c531f26310ee3",
-      "result": "PASS"
-    },
-    "run120_onefile_build": {
-      "run_id": 36152761535,
-      "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
-      "result": "IN_PROGRESS",
-      "scope": "PyInstaller one-file build + --ai-status smoke + packaged UI readiness/health + artifact"
-    },
-    "run120_onefile_verified_source": {
+    "run120_verified_source": {
       "run_id": 36152761535,
       "sha": "ba1e081cebe915d16d61efb6b14097374e8536b0",
       "result": "PASS",
@@ -65,32 +44,104 @@
     "run120_clean_candidate": {
       "run_id": 36154179847,
       "sha": "da273d3d88e6e0cdde701b95d82620db1e7666ab",
-      "result": "IN_PROGRESS",
-      "note": "same verified packaging files rebased as a single clean commit directly on current main"
+      "result": "PASS"
+    },
+    "run120_post_promotion": {
+      "run_id": 36157788053,
+      "sha": "3ead98de27e682f88afae16162e34a4baed55aba",
+      "result": "PASS"
+    },
+    "run121_candidate": {
+      "run_id": 36424229966,
+      "sha": "342127a3b5c79923d9012e8218862f864c817ea7",
+      "result": "PASS",
+      "source_truth": "PASS",
+      "gameplay_director_e2e": "PASS",
+      "windows_launcher_ui": "PASS",
+      "windows_onefile_build": "PASS",
+      "packaged_ui_readiness": "PASS",
+      "artifact_id": 10970551738,
+      "artifact_name": "ZeroCut-Windows-OneFile-342127a3b5c79923d9012e8218862f864c817ea7",
+      "artifact_archive_bytes": 9579922,
+      "artifact_digest": "sha256:ee9843becdf3b619f7d7b09bb4b84e12967ec3ba1e7e0883b5227928ff321d33",
+      "artifact_expires_at": "2026-10-05T12:49:49Z"
+    },
+    "public_preview_candidate_attempt": {
+      "run_id": 36424867431,
+      "result": "FAIL_BEFORE_STEPS",
+      "note": "github-pages deployment environment rejected candidate-branch job before workflow steps; Pages workflow changed to release from protected main only"
     }
   },
   "benchmark_baseline": {
-    "windows_real": "RUN119_NATIVE_UI_PASS_AND_PROMOTED",
-    "windows_onefile": "EXE_REAL_BUILD_UI_PASS_CLEAN_REBASE_CI_IN_PROGRESS",
-    "real_ps_r6_gameplay": "NOT_EXECUTED"
+    "windows_real": "RUN121_NATIVE_AND_ONEFILE_UI_PASS_ON_WINDOWS_ACTIONS",
+    "gameplay_director": "RUN121_E2E_PASS_WITH_ENCODED_TEST_FIXTURE",
+    "real_ps_r6_gameplay": "NOT_EXECUTED_NO_REAL_FIXTURE_AVAILABLE"
   },
   "implemented": [
     "Run118 verified transcript preview/apply -> changed timeline -> real export/QC",
-    "Run119 deterministic one-click launcher uses explicit runtime manifest and protected dependency chain",
-    "Run119 prefers bundled Python, gates Python>=3.11, integrates FFmpeg/ffprobe and fails closed on invalid runtime dependencies",
-    "Run119 same-step Windows readiness verifier certifies atomic ready-file -> /api/health -> real UI before launcher success",
-    "Run119 native Windows candidate CI PASS and post-promotion main CI PASS",
-    "Run120 PyInstaller one-file entrypoint packages the verified Run119->118->117->113->112 runtime chain",
-    "Run120 build script creates ZeroCut.exe, checks size, --ai-status and SHA256",
-    "Run120 CI builds the real one-file executable, smokes packaged UI readiness and publishes the EXE artifact",
-    "Run120 one-file spec explicitly includes dynamically loaded runtime imports and disables UPX"
+    "Run119 native Windows one-click launcher and real UI readiness promoted",
+    "Run120 ZeroCut.exe one-file packaging promoted and post-promotion CI PASS",
+    "Run121 candidate adds one gameplay Director transaction from local video analysis through preview/apply/cancel",
+    "Run121 candidate uses certified R6 replay/timeline events only for semantic clips; OCR/audio/motion cannot fabricate kills",
+    "Run121 candidate falls back to generic multi-signal highlights when semantic R6 evidence is absent",
+    "Run121 candidate integrates local Whisper and bounded RapidOCR evidence into the gameplay plan",
+    "Run121 candidate activates the new Director in Windows launcher and PyInstaller one-file chain",
+    "Run121 candidate E2E test requires real encoded MP4, timeline delta, real FFmpeg export and duration/A-V/decode QC",
+    "Run121 CI restores the real RapidOCR certification gate before the gameplay E2E",
+    "Run121 E2E passes encoded test video -> local structural analysis + real local Whisper/RapidOCR -> conservative gameplay Director -> preview/apply/cancel -> changed editable timeline -> FFmpeg export -> duration/A-V/decode QC",
+    "Run121 Windows launcher starts and certifies the actual active local UI using runtime-consistent readiness rather than a Run119 hardcode",
+    "Run121 one-file ZeroCut.exe builds, starts, passes packaged UI readiness and publishes an Actions artifact",
+    "Run121 actual app web assets receive coherent SVG action icons, soft layered depth, refined timeline clips, inspector/preview materials and responsive polish",
+    "Public static preview is privacy-safe and truthful: browser-local import/monitor/timeline/split work; Whisper/OCR/Director/export are explicitly not simulated"
   ],
   "blockers": [
-    "Run120 clean candidate CI 36154179847 must complete green before promotion",
-    "Real PlayStation Rainbow Six gameplay certification remains pending",
-    "Browser-driven transcript/export E2E remains pending",
-    "Creator engine local remains incomplete"
+    "Public Pages deployment must run from protected main after promotion and then be opened externally",
+    "Real PlayStation/Rainbow Six gameplay certification is blocked because no real fixture is available",
+    "Creator-from-zero local engine remains incomplete"
   ],
-  "next_action": "Inspect clean Run120 CI 36154179847 once. If FAIL, fix the exact build/runtime/UI step on candidate/run120-windows-onefile-clean-20260925. If PASS, fast-forward main to da273d3, verify post-promotion main CI, record the promoted ZeroCut.exe artifact evidence, then move priority to real PlayStation/Rainbow Six end-to-end certification.",
-  "updated_at": "2026-09-25T17:27:00+02:00"
+  "next_action": "Open/merge protected Run121 sprint PR to main; verify post-merge Source Truth + Windows/one-file once; verify main Pages deployment and open the public preview. If release checks pass, deliver the artifact and preview while explicitly listing creator-local and real-PS/R6 as residuals.",
+  "updated_at": "2026-09-28T15:10:00+02:00",
+  "score_note": "Historical scores intentionally frozen during delivery sprint; use sprint_delivery checklist for current release evidence instead of inventing percentage deltas.",
+  "sprint_delivery": {
+    "deadline": "2026-09-28T23:59:00+02:00",
+    "release_candidate_sha": "342127a3b5c79923d9012e8218862f864c817ea7",
+    "checklist": [
+      {
+        "requirement": "video -> analysis/Whisper/OCR -> Director -> timeline -> preview/apply/cancel -> export/QC",
+        "status": "DONE_TEST_FIXTURE",
+        "proof": "Run 36424229966 source-truth-smoke PASS including Run121 E2E; encoded local test video; real local Whisper/RapidOCR; FFmpeg/ffprobe QC",
+        "limit": "Not a real PlayStation/Rainbow Six capture"
+      },
+      {
+        "requirement": "Windows one-click local EXE",
+        "status": "DONE_CI_WINDOWS",
+        "proof": "Run 36424229966 windows-launcher-smoke + windows-onefile-build PASS; artifact 10970551738",
+        "limit": "Verified on GitHub Windows runner, not user's physical PC"
+      },
+      {
+        "requirement": "premium editor UI",
+        "status": "DONE_CODE_AND_LOCAL_VISUAL_CHECK",
+        "proof": "Actual Run121 app asset enhancer + local rendered screenshots at desktop, 390px and 430px",
+        "limit": "No physical Windows screenshot capture in this sprint"
+      },
+      {
+        "requirement": "public web preview",
+        "status": "PENDING_MAIN_DEPLOY",
+        "proof": "privacy-safe clickable root index committed; Pages workflow prepared for main",
+        "limit": "Candidate Pages job failed before steps; static preview never certifies local FFmpeg/AI"
+      },
+      {
+        "requirement": "real PS/R6 gameplay certification",
+        "status": "BLOCKED_NO_REAL_FIXTURE",
+        "proof": "No real fixture available in repository/session",
+        "limit": "Synthetic encoded test fixture is explicitly labeled"
+      },
+      {
+        "requirement": "creator-from-zero local engine",
+        "status": "INCOMPLETE",
+        "proof": "Existing requirement remains open",
+        "limit": "Not removed from scope; no 100% claim"
+      }
+    ]
+  }
 }

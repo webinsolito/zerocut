@@ -1,3 +1,4 @@
+src\ZeroCut_Run121_Candidate_GameplayDirector.pyw
 src\ZeroCut_Run119_Candidate_WindowsReadiness.pyw
 src\ZeroCut_Run118_Candidate_ExportQC.pyw
 src\ZeroCut_Run117_Candidate_TranscriptUI.pyw

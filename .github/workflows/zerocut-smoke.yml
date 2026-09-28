@@ -19,7 +19,7 @@ on:
 jobs:
   source-truth-smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -54,6 +54,9 @@ jobs:
       - name: Run109 R6 evidence gate
         if: hashFiles('src/ZeroCut_Run109_Candidate_R6EvidenceGate.pyw') != ''
         run: python tests/test_run109_r6_evidence_gate.py
+      - name: Run110 real RapidOCR certification
+        if: hashFiles('src/ZeroCut_Run110_Candidate_OCRCertification.pyw') != ''
+        run: python tests/test_run110_ocr_certification.py
       - name: Run111 real Whisper certification
         if: hashFiles('src/ZeroCut_Run111_Candidate_WhisperCertification.pyw') != ''
         run: python tests/test_run111_whisper_certification.py
@@ -70,6 +73,8 @@ jobs:
         run: python tests/test_run119_windows_launcher.py
       - name: Run120 one-file packaging contract
         run: python tests/test_run120_onefile_contract.py
+      - name: Run121 gameplay director end-to-end
+        run: python tests/test_run121_gameplay_director.py
 
   windows-launcher-smoke:
     runs-on: windows-latest
@@ -89,7 +94,7 @@ jobs:
           $target = Join-Path $PWD $rel
           if (!(Test-Path $target)) { throw "Configured runtime missing: $target" }
           $required = Get-Content runtime\active_runtime.required.txt | Where-Object { $_.Trim() }
-          if ($required.Count -lt 6) { throw "Runtime dependency manifest incomplete" }
+          if ($required.Count -lt 7) { throw "Runtime dependency manifest incomplete" }
           foreach ($item in $required) {
             $path = Join-Path $PWD $item.Trim()
             if (!(Test-Path $path)) { throw "Runtime dependency missing: $item" }
@@ -137,8 +142,8 @@ jobs:
         env:
           ZEROCUT_LAUNCHER_NO_PAUSE: "1"
           ZEROCUT_LAUNCHER_VERIFY_READY: "1"
-          ZEROCUT_HOME: ${{ github.workspace }}\run119-home
-          ZEROCUT_READY_FILE: ${{ github.workspace }}\run119-ready.json
+          ZEROCUT_HOME: ${{ github.workspace }}\run121-home
+          ZEROCUT_READY_FILE: ${{ github.workspace }}\run121-ready.json
         run: |
           call ZeroCut.cmd --no-browser --port 18765 --ready-file "%ZEROCUT_READY_FILE%"
           if errorlevel 1 (
@@ -152,7 +157,7 @@ jobs:
         if: always()
         shell: pwsh
         env:
-          ZEROCUT_READY_FILE: ${{ github.workspace }}\run119-ready.json
+          ZEROCUT_READY_FILE: ${{ github.workspace }}\run121-ready.json
         run: |
           if (Test-Path $env:ZEROCUT_READY_FILE) {
             try {
@@ -184,8 +189,8 @@ jobs:
       - name: Smoke actual packaged ZeroCut.exe UI
         shell: pwsh
         run: |
-          $env:ZEROCUT_HOME = Join-Path $PWD "run120-onefile-home"
-          $ready = Join-Path $PWD "run120-onefile-ready.json"
+          $env:ZEROCUT_HOME = Join-Path $PWD "run121-onefile-home"
+          $ready = Join-Path $PWD "run121-onefile-ready.json"
           Remove-Item $ready -Force -ErrorAction SilentlyContinue
           $exe = Join-Path $PWD "dist\windows\ZeroCut.exe"
           $proc = Start-Process -FilePath $exe -ArgumentList @("--no-browser","--port","18865","--ready-file",$ready) -PassThru

@@ -16,9 +16,10 @@ build = BUILD.read_text(encoding="utf-8")
 
 assert 'getattr(sys, "_MEIPASS", None)' in entry
 assert 'runpy.run_path' in entry
-assert 'ZeroCut_Run119_Candidate_WindowsReadiness.pyw' in entry
+assert 'ZeroCut_Run121_Candidate_GameplayDirector.pyw' in entry
 
 for name in (
+    "ZeroCut_Run121_Candidate_GameplayDirector.pyw",
     "ZeroCut_Run119_Candidate_WindowsReadiness.pyw",
     "ZeroCut_Run118_Candidate_ExportQC.pyw",
     "ZeroCut_Run117_Candidate_TranscriptUI.pyw",
